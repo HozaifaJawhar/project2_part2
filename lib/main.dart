@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: '',
       theme: ThemeData(),
-      home: Scaffold(body: Center(child: Text('welcome to management app'))),
+      home: Scaffold(body: Center(child: Text('welcome to managemen app'))),
     );
   }
 }
