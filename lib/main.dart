@@ -1,3 +1,5 @@
+import 'package:ammerha_management/config/theme/app_theme.dart';
+import 'package:ammerha_management/screens/home_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -10,9 +12,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '',
-      theme: ThemeData(),
-      home: Scaffold(body: Center(child: Text('welcome to managemen app'))),
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.lightTheme,
+      home: HomePage(),
     );
   }
 }
