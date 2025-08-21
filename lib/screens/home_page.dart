@@ -1,4 +1,6 @@
 import 'package:ammerha_management/config/theme/app_theme.dart';
+import 'package:ammerha_management/core/models/event_class.dart';
+import 'package:ammerha_management/widgets/events/event_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -10,27 +12,205 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final String image = "assets/images/level1(2).jpg";
+  final List<Event> events = [
+    Event(
+      imageUrl: 'assets/images/event_image.jpg',
+      date: '١ أغسطس ٢٠٢٥',
+      time: '1:00',
+      category: 'صحي',
+      title: 'فعالية التبرع بالدم',
+      description:
+          'تهدف هذه الفعالية الى تقوية التكاتف الاجتماعي وروح المبادرة والتخفيف عن المرضى وذويهم متاعب البحث عن زمر الدم المطلوبة',
+      place: 'مشفى المواساة',
+      totalVolunteers: 50,
+      joinedVolunteers: 20,
+      hours: 2,
+      leader: 'ali',
+    ),
+    Event(
+      imageUrl: 'assets/images/event_image.jpg',
+      date: '٥ أغسطس ٢٠٢٥',
+      time: '1:00',
+      category: 'ثقافي',
+      title: 'مساعدة في معرض الكتاب',
+      description:
+          'تهدف هذه الفعالية الى تقوية التكاتف الاجتماعي وروح المبادرة والتخفيف عن المرضى وذويهم متاعب البحث عن زمر الدم المطلوبة',
+      place: 'مشفى المواساة',
+      totalVolunteers: 30,
+      joinedVolunteers: 15,
+      hours: 2,
+      leader: 'ali',
+    ),
+    Event(
+      imageUrl: 'assets/images/event_image.jpg',
+      date: '٥ أغسطس ٢٠٢٥',
+      time: '1:00',
+      category: 'ثقافي',
+      title: 'مساعدة في معرض الكتاب',
+      description:
+          'تهدف هذه الفعالية الى تقوية التكاتف الاجتماعي وروح المبادرة والتخفيف عن المرضى وذويهم متاعب البحث عن زمر الدم المطلوبة',
+      place: 'مشفى المواساة',
+      totalVolunteers: 30,
+      joinedVolunteers: 15,
+      hours: 2,
+      leader: 'ali',
+    ),
+    Event(
+      imageUrl: 'assets/images/event_image.jpg',
+      date: '٥ أغسطس ٢٠٢٥',
+      time: '1:00',
+      category: 'ثقافي',
+      title: 'مساعدة في معرض الكتاب',
+      description:
+          'تهدف هذه الفعالية الى تقوية التكاتف الاجتماعي وروح المبادرة والتخفيف عن المرضى وذويهم متاعب البحث عن زمر الدم المطلوبة',
+      place: 'مشفى المواساة',
+      totalVolunteers: 30,
+      joinedVolunteers: 15,
+      hours: 2,
+      leader: 'ali',
+    ),
+    Event(
+      imageUrl: 'assets/images/event_image.jpg',
+      date: '٥ أغسطس ٢٠٢٥',
+      time: '1:00',
+      category: 'ثقافي',
+      title: 'مساعدة في معرض الكتاب',
+      description:
+          'تهدف هذه الفعالية الى تقوية التكاتف الاجتماعي وروح المبادرة والتخفيف عن المرضى وذويهم متاعب البحث عن زمر الدم المطلوبة',
+      place: 'مشفى المواساة',
+      totalVolunteers: 30,
+      joinedVolunteers: 15,
+      hours: 2,
+      leader: 'ali',
+    ),
+  ];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: AppBar(
-        backgroundColor: AppColors.primary,
-        centerTitle: true,
-        title: Text(
-          'الفعاليات ',
-          style: GoogleFonts.almarai(
-            fontWeight: FontWeight.bold,
-            color: AppColors.white,
+    return GestureDetector(
+      onTap: () =>
+          FocusScope.of(context).unfocus(), // إلغاء الفوكس عند الضغط برّا
+      child: Scaffold(
+        backgroundColor: AppColors.white,
+        appBar: AppBar(
+          backgroundColor: AppColors.primary,
+          centerTitle: true,
+          title: Text(
+            'إدارة الفعاليات ',
+            style: TextStyle(
+              fontWeight: FontWeight.w800,
+              fontFamily: 'Cairo',
+              fontSize: 25,
+              color: AppColors.white,
+            ),
+          ),
+          iconTheme: const IconThemeData(color: Colors.white),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IconButton(
+                icon: const Icon(
+                  size: 30,
+                  Icons.notifications_none_outlined,
+                  color: Colors.white,
+                ),
+                onPressed: () {},
+              ),
+            ),
+          ],
+        ),
+
+        body: Directionality(
+          textDirection: TextDirection.rtl,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 18),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 16),
+                      child: Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: AppColors.grey2, width: 2),
+                        ),
+                        padding: const EdgeInsets.all(8),
+                        child: const Icon(
+                          size: 30,
+                          Icons.filter_alt,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 16, right: 8),
+                        child: SizedBox(
+                          height: 50,
+                          child: TextField(
+                            decoration: InputDecoration(
+                              hintText: 'البحث عن فرصة',
+
+                              fillColor: AppColors.white,
+                              suffixIcon: const Icon(Icons.search),
+                              suffixIconColor: AppColors.grey2,
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: const BorderSide(
+                                  color:
+                                      AppColors.grey2, // لون البوردر قبل الضغط
+                                  width: 1.5,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: const BorderSide(
+                                  color: AppColors
+                                      .primary, // لون البوردر عند الضغط
+                                  width: 2,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16, right: 16),
+                child: Text(
+                  'الفرص القائمة',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontFamily: 'Cairo',
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: events.length,
+                  padding: const EdgeInsets.all(14),
+                  itemBuilder: (context, index) {
+                    return OpportunityCard(event: events[index]);
+                  },
+                ),
+              ),
+            ],
           ),
         ),
-        iconTheme: const IconThemeData(color: Colors.white),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications, color: Colors.white),
-            onPressed: () {},
-          ),
-        ],
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          tooltip: 'Increment',
+          child: const Icon(Icons.add),
+        ), // ←
       ),
     );
   }
