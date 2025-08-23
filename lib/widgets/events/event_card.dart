@@ -1,5 +1,6 @@
 import 'package:ammerha_management/config/theme/app_theme.dart';
 import 'package:ammerha_management/core/models/event_class.dart';
+import 'package:ammerha_management/screens/event_details_screen.dart';
 import 'package:flutter/material.dart';
 
 class OpportunityCard extends StatelessWidget {
@@ -97,7 +98,14 @@ class OpportunityCard extends StatelessWidget {
             ),
 
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EventDetailsScreen(event: event),
+                  ),
+                );
+              },
               child: Container(
                 width: 37,
                 height: 100,
