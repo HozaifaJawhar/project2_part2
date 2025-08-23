@@ -1,9 +1,10 @@
 import 'package:ammerha_management/config/theme/app_theme.dart';
 import 'package:ammerha_management/core/models/event_class.dart';
+import 'package:ammerha_management/core/models/volunteer_profil_class.dart';
 import 'package:ammerha_management/screens/create_event.dart';
+import 'package:ammerha_management/widgets/basics/drawer.dart';
 import 'package:ammerha_management/widgets/events/event_card.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,80 +15,83 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final String image = "assets/images/level1(2).jpg";
-  List<Event> events = [];
-
-  // final List<Event> events = [
-  //   Event(
-  //     imageUrl: 'assets/images/event_image.jpg',
-  //     date: '١ أغسطس ٢٠٢٥',
-  //     time: '1:00',
-  //     category: 'صحي',
-  //     title: 'فعالية التبرع بالدم',
-  //     description:
-  //         'تهدف هذه الفعالية الى تقوية التكاتف الاجتماعي وروح المبادرة والتخفيف عن المرضى وذويهم متاعب البحث عن زمر الدم المطلوبة',
-  //     place: 'مشفى المواساة',
-  //     totalVolunteers: 50,
-  //     joinedVolunteers: 20,
-  //     hours: 2,
-  //     leader: 'ali',
-  //   ),
-  //   Event(
-  //     imageUrl: 'assets/images/event_image.jpg',
-  //     date: '٥ أغسطس ٢٠٢٥',
-  //     time: '1:00',
-  //     category: 'ثقافي',
-  //     title: 'مساعدة في معرض الكتاب',
-  //     description:
-  //         'تهدف هذه الفعالية الى تقوية التكاتف الاجتماعي وروح المبادرة والتخفيف عن المرضى وذويهم متاعب البحث عن زمر الدم المطلوبة',
-  //     place: 'مشفى المواساة',
-  //     totalVolunteers: 30,
-  //     joinedVolunteers: 15,
-  //     hours: 2,
-  //     leader: 'ali',
-  //   ),
-  //   Event(
-  //     imageUrl: 'assets/images/event_image.jpg',
-  //     date: '٥ أغسطس ٢٠٢٥',
-  //     time: '1:00',
-  //     category: 'ثقافي',
-  //     title: 'مساعدة في معرض الكتاب',
-  //     description:
-  //         'تهدف هذه الفعالية الى تقوية التكاتف الاجتماعي وروح المبادرة والتخفيف عن المرضى وذويهم متاعب البحث عن زمر الدم المطلوبة',
-  //     place: 'مشفى المواساة',
-  //     totalVolunteers: 30,
-  //     joinedVolunteers: 15,
-  //     hours: 2,
-  //     leader: 'ali',
-  //   ),
-  //   Event(
-  //     imageUrl: 'assets/images/event_image.jpg',
-  //     date: '٥ أغسطس ٢٠٢٥',
-  //     time: '1:00',
-  //     category: 'ثقافي',
-  //     title: 'مساعدة في معرض الكتاب',
-  //     description:
-  //         'تهدف هذه الفعالية الى تقوية التكاتف الاجتماعي وروح المبادرة والتخفيف عن المرضى وذويهم متاعب البحث عن زمر الدم المطلوبة',
-  //     place: 'مشفى المواساة',
-  //     totalVolunteers: 30,
-  //     joinedVolunteers: 15,
-  //     hours: 2,
-  //     leader: 'ali',
-  //   ),
-  //   Event(
-  //     imageUrl: 'assets/images/event_image.jpg',
-  //     date: '٥ أغسطس ٢٠٢٥',
-  //     time: '1:00',
-  //     category: 'ثقافي',
-  //     title: 'مساعدة في معرض الكتاب',
-  //     description:
-  //         'تهدف هذه الفعالية الى تقوية التكاتف الاجتماعي وروح المبادرة والتخفيف عن المرضى وذويهم متاعب البحث عن زمر الدم المطلوبة',
-  //     place: 'مشفى المواساة',
-  //     totalVolunteers: 30,
-  //     joinedVolunteers: 15,
-  //     hours: 2,
-  //     leader: 'ali',
-  //   ),
-  // ];
+  // List<Event> events = [];
+  VolunteerProfilClass volunteerProfile = new VolunteerProfilClass(
+    profileImageUrl: 'profileImageUrl',
+    name: 'missan',
+  );
+  final List<Event> events = [
+    Event(
+      imageUrl: 'assets/images/event_image.jpg',
+      date: '١ أغسطس ٢٠٢٥',
+      time: '1:00',
+      category: 'صحي',
+      title: 'فعالية التبرع بالدم',
+      description:
+          'تهدف هذه الفعالية الى تقوية التكاتف الاجتماعي وروح المبادرة والتخفيف عن المرضى وذويهم متاعب البحث عن زمر الدم المطلوبة',
+      place: 'مشفى المواساة',
+      totalVolunteers: 50,
+      joinedVolunteers: 20,
+      hours: 2,
+      leader: 'ali',
+    ),
+    Event(
+      imageUrl: 'assets/images/event_image.jpg',
+      date: '٥ أغسطس ٢٠٢٥',
+      time: '1:00',
+      category: 'ثقافي',
+      title: 'مساعدة في معرض الكتاب',
+      description:
+          'تهدف هذه الفعالية الى تقوية التكاتف الاجتماعي وروح المبادرة والتخفيف عن المرضى وذويهم متاعب البحث عن زمر الدم المطلوبة',
+      place: 'مشفى المواساة',
+      totalVolunteers: 30,
+      joinedVolunteers: 15,
+      hours: 2,
+      leader: 'ali',
+    ),
+    Event(
+      imageUrl: 'assets/images/event_image.jpg',
+      date: '٥ أغسطس ٢٠٢٥',
+      time: '1:00',
+      category: 'ثقافي',
+      title: 'مساعدة في معرض الكتاب',
+      description:
+          'تهدف هذه الفعالية الى تقوية التكاتف الاجتماعي وروح المبادرة والتخفيف عن المرضى وذويهم متاعب البحث عن زمر الدم المطلوبة',
+      place: 'مشفى المواساة',
+      totalVolunteers: 30,
+      joinedVolunteers: 15,
+      hours: 2,
+      leader: 'ali',
+    ),
+    Event(
+      imageUrl: 'assets/images/event_image.jpg',
+      date: '٥ أغسطس ٢٠٢٥',
+      time: '1:00',
+      category: 'ثقافي',
+      title: 'مساعدة في معرض الكتاب',
+      description:
+          'تهدف هذه الفعالية الى تقوية التكاتف الاجتماعي وروح المبادرة والتخفيف عن المرضى وذويهم متاعب البحث عن زمر الدم المطلوبة',
+      place: 'مشفى المواساة',
+      totalVolunteers: 30,
+      joinedVolunteers: 15,
+      hours: 2,
+      leader: 'ali',
+    ),
+    Event(
+      imageUrl: 'assets/images/event_image.jpg',
+      date: '٥ أغسطس ٢٠٢٥',
+      time: '1:00',
+      category: 'ثقافي',
+      title: 'مساعدة في معرض الكتاب',
+      description:
+          'تهدف هذه الفعالية الى تقوية التكاتف الاجتماعي وروح المبادرة والتخفيف عن المرضى وذويهم متاعب البحث عن زمر الدم المطلوبة',
+      place: 'مشفى المواساة',
+      totalVolunteers: 30,
+      joinedVolunteers: 15,
+      hours: 2,
+      leader: 'ali',
+    ),
+  ];
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -122,7 +126,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-
+        drawer: CustomDrawer(),
         body: Directionality(
           textDirection: TextDirection.rtl,
           child: Column(
@@ -200,11 +204,14 @@ class _HomePageState extends State<HomePage> {
               Expanded(
                 child: events.isEmpty
                     ? const Center(child: Text("لا توجد فعاليات بعد"))
-                    : ListView.builder(
-                        itemCount: events.length,
-                        itemBuilder: (context, index) {
-                          return OpportunityCard(event: events[index]);
-                        },
+                    : Padding(
+                        padding: const EdgeInsets.only(left: 16, right: 16),
+                        child: ListView.builder(
+                          itemCount: events.length,
+                          itemBuilder: (context, index) {
+                            return OpportunityCard(event: events[index]);
+                          },
+                        ),
                       ),
               ),
             ],

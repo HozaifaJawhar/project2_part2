@@ -2,7 +2,8 @@ import 'package:ammerha_management/config/theme/app_theme.dart';
 import 'package:ammerha_management/screens/home_page.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 

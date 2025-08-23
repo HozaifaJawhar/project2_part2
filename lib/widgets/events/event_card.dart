@@ -1,5 +1,6 @@
 import 'package:ammerha_management/config/theme/app_theme.dart';
 import 'package:ammerha_management/core/models/event_class.dart';
+import 'package:ammerha_management/screens/edit_event_info.dart';
 import 'package:ammerha_management/screens/event_details_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -80,10 +81,20 @@ class OpportunityCard extends StatelessWidget {
                   SizedBox(height: 6),
                   Row(
                     children: [
-                      const Icon(
-                        size: 22,
-                        Icons.edit_calendar_outlined,
-                        color: Colors.amberAccent,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditEventInfo(),
+                            ),
+                          );
+                        },
+                        child: const Icon(
+                          size: 22,
+                          Icons.edit_calendar_outlined,
+                          color: Colors.amberAccent,
+                        ),
                       ),
                       SizedBox(width: 8),
                       const Icon(

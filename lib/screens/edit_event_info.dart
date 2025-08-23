@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:ammerha_management/config/theme/app_theme.dart';
 import 'package:ammerha_management/core/models/event_class.dart';
 import 'package:ammerha_management/widgets/events/dropdownField.dart';
@@ -8,17 +9,17 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class CreateEventPage extends StatefulWidget {
-  const CreateEventPage({super.key});
+class EditEventInfo extends StatefulWidget {
+  const EditEventInfo({super.key});
 
   @override
-  State<CreateEventPage> createState() => _CreateEventPageState();
+  State<EditEventInfo> createState() => _EditEventInfoState();
 }
 
-class _CreateEventPageState extends State<CreateEventPage> {
+class _EditEventInfoState extends State<EditEventInfo> {
+  final _formKey = GlobalKey<FormState>();
   XFile? _selectedImage;
   final ImagePicker _picker = ImagePicker();
-
   Future<void> _pickImage() async {
     PermissionStatus status;
 
@@ -64,8 +65,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
     }
   }
 
-  final _formKey = GlobalKey<FormState>();
-
   // Controllers
   final TextEditingController nameController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
@@ -96,7 +95,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
           backgroundColor: AppColors.white,
           centerTitle: true,
           title: Text(
-            'إنشاء فعالية جديدة',
+            'تعديل فعالية',
             style: TextStyle(
               fontWeight: FontWeight.w800,
               fontFamily: 'Cairo',
@@ -444,7 +443,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                         ),
                         elevation: 5, // الظل
                       ),
-                      child: Center(child: const Text("إنشاء الفعالية")),
+                      child: Center(child: const Text("تعديل الفعالية")),
                     ),
                   ),
                 ),
