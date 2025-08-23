@@ -17,72 +17,76 @@ class CustomDrawer extends StatelessWidget {
     return Drawer(
       width: screenWidth * 0.85,
       backgroundColor: Colors.grey.shade100,
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildDrawerHeader(context),
-              const SizedBox(height: 24),
-              _buildDrawerItem(
-                icon: Icons.settings_outlined,
-                text: 'المتطوعين',
-                onTap: () {},
+      child: ListView(
+        children: [
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildDrawerHeader(context),
+                  const SizedBox(height: 24),
+                  _buildDrawerItem(
+                    icon: Icons.settings_outlined,
+                    text: 'المتطوعين',
+                    onTap: () {},
+                  ),
+                  _buildDrawerItem(
+                    icon: Icons.light_mode_outlined,
+                    text: 'الإداريين',
+                    onTap: () {},
+                  ),
+                  _buildDrawerItem(
+                    icon: Icons.style_outlined,
+                    text: 'طلبات التطوع',
+                    onTap: () {},
+                  ),
+                  _buildDrawerItem(
+                    icon: Icons.delete_outlined,
+                    text: 'طلبات الإنضمام للفريق الإداري',
+                    onTap: () {},
+                  ),
+                  _buildDrawerItem(
+                    icon: Icons.info_outline,
+                    text: 'إضافة رول إداري جديد',
+                    onTap: () {},
+                  ),
+                  _buildDrawerItem(
+                    icon: Icons.info_outline,
+                    text: 'إضافة قسم تطوعي جديد',
+                    onTap: () {},
+                  ),
+                  _buildDrawerItem(
+                    icon: Icons.info_outline,
+                    text: 'الأخبار',
+                    onTap: () {},
+                  ),
+                  _buildDrawerItem(
+                    icon: Icons.info_outline,
+                    text: 'لوحة الشرف',
+                    onTap: () {},
+                  ),
+                  // Spacer pushes the logout item to the bottom of the column.
+                  // const Spacer(),
+                  _buildDrawerItem(
+                    icon: Icons.logout,
+                    text: 'تسجيل الخروج',
+                    color: Colors.red.shade700,
+                    onTap: () {
+                      //   Navigator.pushNamedAndRemoveUntil(
+                      //     context,
+                      //     AppRoutes.loginRoute,
+                      //     // remove all previous routes from the stack.
+                      //     (Route<dynamic> route) => false,
+                      //   );
+                    },
+                  ),
+                ],
               ),
-              _buildDrawerItem(
-                icon: Icons.light_mode_outlined,
-                text: 'الإداريين',
-                onTap: () {},
-              ),
-              _buildDrawerItem(
-                icon: Icons.style_outlined,
-                text: 'طلبات التطوع',
-                onTap: () {},
-              ),
-              _buildDrawerItem(
-                icon: Icons.delete_outlined,
-                text: 'طلبات الإنضمام للفريق الإداري',
-                onTap: () {},
-              ),
-              _buildDrawerItem(
-                icon: Icons.info_outline,
-                text: 'إضافة رول إداري جديد',
-                onTap: () {},
-              ),
-              _buildDrawerItem(
-                icon: Icons.info_outline,
-                text: 'إضافة قسم تطوعي جديد',
-                onTap: () {},
-              ),
-              _buildDrawerItem(
-                icon: Icons.info_outline,
-                text: 'الأخبار',
-                onTap: () {},
-              ),
-              _buildDrawerItem(
-                icon: Icons.info_outline,
-                text: 'لوحة الشرف',
-                onTap: () {},
-              ),
-              // Spacer pushes the logout item to the bottom of the column.
-              // const Spacer(),
-              _buildDrawerItem(
-                icon: Icons.logout,
-                text: 'تسجيل الخروج',
-                color: Colors.red.shade700,
-                onTap: () {
-                  //   Navigator.pushNamedAndRemoveUntil(
-                  //     context,
-                  //     AppRoutes.loginRoute,
-                  //     // remove all previous routes from the stack.
-                  //     (Route<dynamic> route) => false,
-                  //   );
-                },
-              ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
