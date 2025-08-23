@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:ammerha_management/config/theme/app_theme.dart';
+import 'package:ammerha_management/core/models/event_class.dart';
 import 'package:ammerha_management/widgets/events/dropdownField.dart';
 import 'package:ammerha_management/widgets/events/text_field.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
       final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
       if (pickedFile != null) {
         setState(() {
-          _selectedImage = File(pickedFile.path) as XFile?;
+          _selectedImage = pickedFile;
         });
       }
     } else if (status.isDenied) {
@@ -361,11 +362,25 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("تم إنشاء الفعالية بنجاح ✅"),
-                        ),
+                      // انشاء كائن Event جديد
+                      final newEvent = Event(
+                        imageUrl:
+                            _selectedImage?.path ?? "assets/images/default.jpg",
+                        date: dateController.text,
+                        time: timeController.text,
+                        category: selectedDepartment ?? "",
+                        title: nameController.text,
+                        description: descriptionController.text,
+                        place: locationController.text,
+                        totalVolunteers:
+                            int.tryParse(volunteersController.text) ?? 0,
+                        joinedVolunteers: 0,
+                        hours: int.tryParse(hoursController.text) ?? 0,
+                        leader: supervisorController.text,
                       );
+
+                      // رجوع إلى الصفحة السابقة مع إرجاع الحدث الجديد
+                      Navigator.pop(context, newEvent);
                     }
                   },
                   child: const Text("إنشاء"),
