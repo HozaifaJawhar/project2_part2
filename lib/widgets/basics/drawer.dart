@@ -28,12 +28,12 @@ class CustomDrawer extends StatelessWidget {
                   _buildDrawerHeader(context),
                   const SizedBox(height: 24),
                   _buildDrawerItem(
-                    icon: Icons.settings_outlined,
+                    icon: Icons.groups_3_outlined,
                     text: 'المتطوعين',
                     onTap: () {},
                   ),
                   _buildDrawerItem(
-                    icon: Icons.light_mode_outlined,
+                    icon: Icons.group_outlined,
                     text: 'الإداريين',
                     onTap: () {},
                   ),
@@ -43,27 +43,28 @@ class CustomDrawer extends StatelessWidget {
                     onTap: () {},
                   ),
                   _buildDrawerItem(
-                    icon: Icons.delete_outlined,
-                    text: 'طلبات الإنضمام للفريق الإداري',
+                    icon: Icons.group_add_outlined,
+                    text: 'إضافة إداري جديد',
+                    onTap: () {},
+                  ),
+
+                  _buildDrawerItem(
+                    icon: Icons.add_box_outlined,
+                    text: 'إدارة الأقسام التطوعية ',
                     onTap: () {},
                   ),
                   _buildDrawerItem(
-                    icon: Icons.info_outline,
+                    icon: Icons.add,
                     text: 'إضافة رول إداري جديد',
                     onTap: () {},
                   ),
                   _buildDrawerItem(
-                    icon: Icons.info_outline,
-                    text: 'إضافة قسم تطوعي جديد',
-                    onTap: () {},
-                  ),
-                  _buildDrawerItem(
-                    icon: Icons.info_outline,
+                    icon: Icons.newspaper,
                     text: 'الأخبار',
                     onTap: () {},
                   ),
                   _buildDrawerItem(
-                    icon: Icons.info_outline,
+                    icon: Icons.celebration_outlined,
                     text: 'لوحة الشرف',
                     onTap: () {},
                   ),

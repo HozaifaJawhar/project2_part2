@@ -3,6 +3,7 @@ import 'package:ammerha_management/core/models/event_class.dart';
 import 'package:ammerha_management/screens/edit_event_info.dart';
 import 'package:ammerha_management/screens/event_details_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class OpportunityCard extends StatelessWidget {
   final Event event;
@@ -11,6 +12,111 @@ class OpportunityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void _showDeleteConfirmationDialog(BuildContext context) {
+      showDialog(
+        context: context,
+        barrierDismissible: false, // ما بيسكر إلا بزر
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Container(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // أيقونة تحذير
+                  Container(
+                    width: 80,
+                    height: 80,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color.fromARGB(255, 182, 31, 20),
+                    ),
+                    child: const Icon(
+                      Icons.warning_amber_rounded,
+                      color: Colors.white,
+                      size: 40,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // النص
+                  Text(
+                    'هل أنت متأكد أنك تريد حذف هذه الفعالية',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.almarai(
+                      fontSize: 16,
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // أزرار (إلغاء + حذف)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      // زر إلغاء
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(); // بسكر الحوار
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Text(
+                          'إلغاء',
+                          style: GoogleFonts.almarai(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+
+                      // زر حذف
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          // هون بتحطي كود الحذف الفعلي
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 182, 31, 20),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Text(
+                          'حذف',
+                          style: GoogleFonts.almarai(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
+
     return GestureDetector(
       onTap: () {
         // Navigator.push(
@@ -97,10 +203,15 @@ class OpportunityCard extends StatelessWidget {
                         ),
                       ),
                       SizedBox(width: 8),
-                      const Icon(
-                        size: 22,
-                        Icons.delete_outlined,
-                        color: Colors.red,
+                      GestureDetector(
+                        onTap: () {
+                          _showDeleteConfirmationDialog(context);
+                        },
+                        child: const Icon(
+                          size: 22,
+                          Icons.delete_outlined,
+                          color: Colors.red,
+                        ),
                       ),
                     ],
                   ),
