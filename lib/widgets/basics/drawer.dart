@@ -1,5 +1,6 @@
 import 'package:ammerha_management/config/theme/app_theme.dart';
 import 'package:ammerha_management/core/models/volunteer_profil_class.dart';
+import 'package:ammerha_management/screens/drawer_screens/departments.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -51,7 +52,12 @@ class CustomDrawer extends StatelessWidget {
                   _buildDrawerItem(
                     icon: Icons.add_box_outlined,
                     text: 'إدارة الأقسام التطوعية ',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Departments()),
+                      );
+                    },
                   ),
                   _buildDrawerItem(
                     icon: Icons.add,

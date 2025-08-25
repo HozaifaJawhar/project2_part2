@@ -139,11 +139,26 @@ class _HomePageState extends State<HomePage> {
                     Padding(
                       padding: const EdgeInsets.only(right: 16),
                       child: Container(
-                        height: 50,
+                        height: 48,
                         decoration: BoxDecoration(
                           color: AppColors.white,
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: AppColors.grey2, width: 2),
+                          border: Border.all(color: AppColors.grey2, width: 1),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color.fromARGB(
+                                255,
+                                224,
+                                220,
+                                220,
+                              ), // لون الظل
+                              blurRadius: 2, // نعومة الظل
+                              offset: const Offset(
+                                1,
+                                1,
+                              ), // اتجاهه (0,0) = كل الجهات
+                            ),
+                          ],
                         ),
                         padding: const EdgeInsets.all(8),
                         child: const Icon(
@@ -158,27 +173,47 @@ class _HomePageState extends State<HomePage> {
                         padding: const EdgeInsets.only(left: 16, right: 8),
                         child: SizedBox(
                           height: 50,
-                          child: TextField(
-                            decoration: InputDecoration(
-                              hintText: 'البحث عن فرصة',
-
-                              fillColor: AppColors.white,
-                              suffixIcon: const Icon(Icons.search),
-                              suffixIconColor: AppColors.grey2,
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(
-                                  color:
-                                      AppColors.grey2, // لون البوردر قبل الضغط
-                                  width: 1.5,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color.fromARGB(
+                                    255,
+                                    224,
+                                    220,
+                                    220,
+                                  ), // لون الظل
+                                  blurRadius: 1, // نعومة الظل
+                                  offset: const Offset(
+                                    1,
+                                    1,
+                                  ), // اتجاهه (0,0) = كل الجهات
                                 ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(
-                                  color: AppColors
-                                      .primary, // لون البوردر عند الضغط
-                                  width: 2,
+                              ],
+                            ),
+                            child: TextField(
+                              decoration: InputDecoration(
+                                hintText: 'البحث عن فرصة',
+
+                                fillColor: AppColors.white,
+                                suffixIcon: const Icon(Icons.search),
+                                suffixIconColor: AppColors.grey2,
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                    color: AppColors
+                                        .grey2, // لون البوردر قبل الضغط
+                                    width: 1.5,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                    color: AppColors
+                                        .primary, // لون البوردر عند الضغط
+                                    width: 2,
+                                  ),
                                 ),
                               ),
                             ),

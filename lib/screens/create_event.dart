@@ -18,7 +18,7 @@ class CreateEventPage extends StatefulWidget {
 class _CreateEventPageState extends State<CreateEventPage> {
   XFile? _selectedImage;
   final ImagePicker _picker = ImagePicker();
-
+  //اعطاء الاذون
   Future<void> _pickImage() async {
     PermissionStatus status;
 
@@ -85,6 +85,19 @@ class _CreateEventPageState extends State<CreateEventPage> {
     "التقني",
     "دعم الشباب",
   ];
+  //validation fun
+  String? _required(String? v, String name) {
+    if (v == null || v.trim().isEmpty) return 'يرجى إدخال $name';
+    return null;
+  }
+
+  String? _positiveInt(String? v, String name, {int min = 1}) {
+    if (v == null || v.trim().isEmpty) return 'يرجى إدخال $name';
+    final n = int.tryParse(v);
+    if (n == null) return 'يرجى إدخال رقم صحيح لـ $name';
+    if (n < min) return '$name يجب أن يكون ${min} فما فوق';
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,6 +122,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
           padding: const EdgeInsets.all(16),
           child: Form(
             key: _formKey,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -121,33 +135,64 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                GestureDetector(
-                  onTap: _pickImage,
-                  child: Container(
-                    width: double.infinity,
-                    height: 150,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(12),
-                      image: _selectedImage != null
-                          ? DecorationImage(
-                              image: FileImage(File(_selectedImage!.path)),
-                              fit: BoxFit.cover,
-                            )
-                          : null,
-                    ),
-                    child: _selectedImage == null
-                        ? const Center(
-                            child: Icon(
-                              Icons.add_a_photo,
-                              size: 40,
-                              color: Colors.grey,
+                FormField<XFile?>(
+                  validator: (_) {
+                    if (_selectedImage == null) {
+                      return 'يرجى اختيار صورة للفعالية';
+                    }
+                    return null;
+                  },
+                  builder: (field) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        GestureDetector(
+                          onTap: _pickImage,
+                          child: Container(
+                            width: double.infinity,
+                            height: 150,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: field.hasError
+                                    ? Colors.red
+                                    : Colors.grey,
+                              ),
+                              borderRadius: BorderRadius.circular(12),
+                              image: _selectedImage != null
+                                  ? DecorationImage(
+                                      image: FileImage(
+                                        File(_selectedImage!.path),
+                                      ),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : null,
                             ),
-                          )
-                        : null,
-                  ),
+                            child: _selectedImage == null
+                                ? const Center(
+                                    child: Icon(
+                                      Icons.add_a_photo,
+                                      size: 40,
+                                      color: Colors.grey,
+                                    ),
+                                  )
+                                : null,
+                          ),
+                        ),
+                        if (field.hasError)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 6, right: 4),
+                            child: Text(
+                              field.errorText!,
+                              style: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                      ],
+                    );
+                  },
                 ),
-                const SizedBox(height: 16),
 
                 // اسم الفعالية
                 Padding(
@@ -162,6 +207,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   controller: nameController,
                   hintText: 'أدخل اسم الفعالية',
                   keyboardType: TextInputType.text,
+                  validator: (v) => _required(v, 'اسم الفعالية'),
                 ),
                 const SizedBox(height: 16),
 
@@ -305,6 +351,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                             controller: hoursController,
                             hintText: 'أدخل عدد الساعات',
                             keyboardType: TextInputType.number,
+                            validator: (v) =>
+                                _positiveInt(v, 'عدد الساعات', min: 1),
                           ),
                         ],
                       ),
@@ -326,6 +374,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                             controller: volunteersController,
                             hintText: 'أدخل عدد المتطوعين',
                             keyboardType: TextInputType.number,
+                            validator: (v) =>
+                                _positiveInt(v, 'عدد المتطوعين', min: 1),
                           ),
                         ],
                       ),
@@ -348,6 +398,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   controller: locationController,
                   hintText: 'أدخل مكان الفعالية',
                   keyboardType: TextInputType.text,
+                  validator: (v) => _required(v, 'مكان الفعالية'),
                 ),
                 const SizedBox(height: 16),
 
@@ -382,6 +433,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   controller: supervisorController,
                   hintText: 'أدخل اسم المشرف',
                   keyboardType: TextInputType.text,
+                  validator: (v) => _required(v, 'اسم المشرف'),
                 ),
 
                 const SizedBox(height: 16),
@@ -399,6 +451,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   controller: descriptionController,
                   hintText: 'أدخل وصف الفعالية',
                   keyboardType: TextInputType.text,
+                  validator: (v) => _required(v, 'وصف الفعالية'),
                 ),
 
                 const SizedBox(height: 20),
@@ -411,7 +464,14 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
                     child: ElevatedButton(
                       onPressed: () async {
-                        String imagePath = '';
+                        FocusScope.of(context).unfocus(); // إغلاق الكيبورد
+                        if (!_formKey.currentState!.validate()) {
+                          // لو في أخطاء، ما بنكمل
+                          return;
+                        }
+
+                        final imagePath = _selectedImage?.path ?? '';
+
                         final newEvent = Event(
                           imageUrl: imagePath,
                           date: dateController.text,
@@ -420,15 +480,15 @@ class _CreateEventPageState extends State<CreateEventPage> {
                           title: nameController.text,
                           description: descriptionController.text,
                           place: locationController.text,
-                          totalVolunteers:
-                              int.tryParse(volunteersController.text) ?? 0,
+                          totalVolunteers: int.parse(volunteersController.text),
                           joinedVolunteers: 0,
-                          hours: int.tryParse(hoursController.text) ?? 0,
+                          hours: int.parse(hoursController.text),
                           leader: supervisorController.text,
                         );
 
                         Navigator.pop(context, newEvent);
                       },
+
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary, // لون الزر
                         foregroundColor: Colors.white, // لون النص والأيقونات

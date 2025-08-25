@@ -107,12 +107,13 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
               ),
             ),
             Divider(
-              color: Colors.grey.shade300,
-              thickness: 1,
-              height: 15,
+              color: Colors.grey.shade200,
+              thickness: 0.7,
+              height: 20,
               indent: 15,
               endIndent: 15,
             ),
+
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Text(
@@ -132,9 +133,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
               ),
             ),
             Divider(
-              color: Colors.grey.shade300,
-              thickness: 1,
-              height: 15,
+              color: Colors.grey.shade200,
+              thickness: 0.7,
+              height: 20,
               indent: 15,
               endIndent: 15,
             ),
@@ -183,9 +184,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
               ),
             ),
             Divider(
-              color: Colors.grey.shade300,
-              thickness: 1,
-              height: 15,
+              color: Colors.grey.shade200,
+              thickness: 0.7,
+              height: 20,
               indent: 15,
               endIndent: 15,
             ),
@@ -208,9 +209,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
               ),
             ),
             Divider(
-              color: Colors.grey.shade300,
-              thickness: 1,
-              height: 15,
+              color: Colors.grey.shade200,
+              thickness: 0.7,
+              height: 20,
               indent: 15,
               endIndent: 15,
             ),
@@ -233,9 +234,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
               ),
             ),
             Divider(
-              color: Colors.grey.shade300,
-              thickness: 1,
-              height: 15,
+              color: Colors.grey.shade200,
+              thickness: 0.7,
+              height: 20,
               indent: 15,
               endIndent: 15,
             ),

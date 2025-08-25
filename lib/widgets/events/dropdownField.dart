@@ -20,46 +20,68 @@ class CustomDropdownField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButtonFormField<String>(
-      value: value,
-      isExpanded: true,
-      decoration: InputDecoration(
-        hintText: hintText,
-        fillColor: AppColors.white,
-        hintStyle: GoogleFonts.poppins(
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-          color: AppColors.greyText,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.grey2, width: 1.0),
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Theme.of(context).primaryColor,
-            width: 1.5,
+    return Directionality(
+      // <<< هي اللي بتخلي القائمة RTL كاملة
+      textDirection: TextDirection.rtl,
+      child: ButtonTheme(
+        alignedDropdown: true,
+        child: DropdownButtonFormField<String>(
+          dropdownColor: AppColors.white,
+          borderRadius: BorderRadius.circular(15),
+
+          style: GoogleFonts.poppins(
+            fontSize: 14, // النص المختار داخل الحقل
+            fontWeight: FontWeight.w600,
+            color: AppColors.black,
           ),
-          borderRadius: BorderRadius.circular(8.0),
+          value: value,
+          isExpanded: true,
+          decoration: InputDecoration(
+            hintText: hintText,
+            fillColor: AppColors.white,
+            filled: true,
+            hintStyle: GoogleFonts.poppins(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: AppColors.greyText,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: AppColors.grey2, width: 1.0),
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: AppColors.primary, width: 1.5),
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+          ),
+          items: items.map((dep) {
+            return DropdownMenuItem(
+              value: dep,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end, // المحاذاة لليمين
+                children: [
+                  Expanded(
+                    child: Text(
+                      dep,
+                      textAlign: TextAlign.right,
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.black,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Icon(Icons.circle, color: AppColors.primary, size: 20),
+                ],
+              ),
+            );
+          }).toList(),
+
+          onChanged: onChanged,
+          validator: validator,
         ),
       ),
-      items: items
-          .map(
-            (dep) => DropdownMenuItem(
-              value: dep,
-              child: Text(
-                dep,
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.black,
-                ),
-              ),
-            ),
-          )
-          .toList(),
-      onChanged: onChanged,
-      validator: validator,
     );
   }
 }
