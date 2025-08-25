@@ -18,6 +18,7 @@ class OpportunityCard extends StatelessWidget {
         barrierDismissible: false, // ما بيسكر إلا بزر
         builder: (BuildContext context) {
           return Dialog(
+            backgroundColor: AppColors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
@@ -27,18 +28,10 @@ class OpportunityCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   // أيقونة تحذير
-                  Container(
-                    width: 80,
-                    height: 80,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Color.fromARGB(255, 182, 31, 20),
-                    ),
-                    child: const Icon(
-                      Icons.warning_amber_rounded,
-                      color: Colors.white,
-                      size: 40,
-                    ),
+                  Icon(
+                    Icons.warning_amber_rounded,
+                    color: Colors.red,
+                    size: 40,
                   ),
                   const SizedBox(height: 20),
 
@@ -48,7 +41,7 @@ class OpportunityCard extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: GoogleFonts.almarai(
                       fontSize: 16,
-                      color: AppColors.primary,
+                      color: AppColors.secondaryBlack,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -64,7 +57,7 @@ class OpportunityCard extends StatelessWidget {
                           Navigator.of(context).pop(); // بسكر الحوار
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.grey,
+                          backgroundColor: AppColors.secondaryWhite,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 24,
                             vertical: 12,
@@ -76,8 +69,9 @@ class OpportunityCard extends StatelessWidget {
                         child: Text(
                           'إلغاء',
                           style: GoogleFonts.almarai(
-                            color: Colors.white,
+                            color: AppColors.primary,
                             fontSize: 16,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
@@ -89,7 +83,7 @@ class OpportunityCard extends StatelessWidget {
                           // هون بتحطي كود الحذف الفعلي
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromARGB(255, 182, 31, 20),
+                          backgroundColor: AppColors.primary,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 24,
                             vertical: 12,
