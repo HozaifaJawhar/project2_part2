@@ -92,11 +92,13 @@ class _HomePageState extends State<HomePage> {
       leader: 'ali',
     ),
   ];
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () =>
-          FocusScope.of(context).unfocus(), // إلغاء الفوكس عند الضغط برّا
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
       child: Scaffold(
         backgroundColor: AppColors.white,
         appBar: AppBar(
@@ -242,6 +244,8 @@ class _HomePageState extends State<HomePage> {
                     : Padding(
                         padding: const EdgeInsets.only(left: 16, right: 16),
                         child: ListView.builder(
+                          keyboardDismissBehavior:
+                              ScrollViewKeyboardDismissBehavior.onDrag,
                           itemCount: events.length,
                           itemBuilder: (context, index) {
                             return OpportunityCard(event: events[index]);
