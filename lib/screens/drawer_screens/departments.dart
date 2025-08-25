@@ -169,6 +169,130 @@ class _DepartmentsState extends State<Departments> {
       );
     }
 
+    void _showAddEditSectionDialog(BuildContext context) {
+      TextEditingController sectionController = TextEditingController();
+
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Directionality(
+            textDirection: TextDirection.rtl,
+            child: Dialog(
+              backgroundColor: AppColors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minWidth: 350, // أقل عرض
+                  maxWidth: 500, // أكبر عرض
+                  minHeight: 200,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // العنوان بالأعلى
+                      Text(
+                        "تعديل قسم",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.almarai(
+                          fontSize: 18,
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8, right: 12),
+                        child: Text(
+                          'اسم القسم',
+                          style: TextStyle(color: AppColors.secondaryBlack),
+                        ),
+                      ),
+
+                      // TextField لإضافة قسم
+                      Directionality(
+                        textDirection: TextDirection.rtl,
+                        child: TextField(
+                          controller: sectionController,
+                          decoration: InputDecoration(
+                            hintText: "أدخل اسم القسم",
+                            hintStyle: GoogleFonts.almarai(
+                              color: AppColors.secondaryBlack.withOpacity(0.5),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: AppColors.secondaryBlack,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: AppColors.primary,
+                                width: 2,
+                              ),
+                            ),
+                            filled: true,
+                            fillColor: AppColors.secondaryWhite,
+                          ),
+                          style: GoogleFonts.almarai(
+                            color: AppColors.secondaryBlack,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+
+                      // زر إضافة
+                      Center(
+                        child: SizedBox(
+                          width: 160, // وسعي عرض الزر
+                          height: 50, // زيدي ارتفاعه
+                          child: ElevatedButton(
+                            onPressed: () {
+                              String sectionName = sectionController.text
+                                  .trim();
+                              if (sectionName.isNotEmpty) {
+                                Navigator.of(context).pop();
+                                // كود الإضافة الفعلي
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: Text(
+                              'تعديل',
+                              style: GoogleFonts.almarai(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
@@ -250,7 +374,7 @@ class _DepartmentsState extends State<Departments> {
                             color: Colors.amberAccent,
                           ),
                           onPressed: () {
-                            // TODO: ضع كود التعديل هنا
+                            _showAddEditSectionDialog(context);
                           },
                         ),
                         IconButton(
