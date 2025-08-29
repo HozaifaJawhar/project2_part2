@@ -10,11 +10,11 @@ class AuthService {
   }) async {
     final data = await _api.post(
       url: '${AppString.baseUrl}/auth/admin/login',
-      body: {'email': email, 'password': password},
+      body: {'username': email, 'password': password},
       token: null,
     );
-    if (data != null && data['token'] != null) {
-      return data['token'];
+    if (data != null && data['data'] != null && data['data']['token'] != null) {
+      return data['data']['token'];
     } else {
       throw Exception(data['message'] ?? 'Failed to login');
     }

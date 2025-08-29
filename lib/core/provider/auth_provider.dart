@@ -24,7 +24,10 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
       return true;
     } on Exception catch (e) {
-      if (e.toString().contains('message')) {
+      // print("API Call Failed: $e");
+      if (e.toString().contains('The selected username is invalid.')) {
+        _errorMessage = "البريد الإلكتروني أو كلمة المرور خاطئة";
+      } else if (e.toString().contains('auth.wrong_credentials')) {
         _errorMessage = "البريد الإلكتروني أو كلمة المرور خاطئة";
       } else {
         _errorMessage = "حدث خطأ غير متوقع. الرجاء المحاولة مرة أخرى";
