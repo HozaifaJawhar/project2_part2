@@ -1,5 +1,6 @@
 import 'package:ammerha_management/core/services/auth_services.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthProvider extends ChangeNotifier {
   final AuthService _authService = AuthService();
@@ -21,10 +22,12 @@ class AuthProvider extends ChangeNotifier {
     try {
       _token = await _authService.login(email: email, password: password);
       _isLoading = false;
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('token', _token!);
       notifyListeners();
+
       return true;
     } on Exception catch (e) {
-      // print("API Call Failed: $e");
       if (e.toString().contains('The selected username is invalid.')) {
         _errorMessage = "البريد الإلكتروني أو كلمة المرور خاطئة";
       } else if (e.toString().contains('auth.wrong_credentials')) {
@@ -37,5 +40,11 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
       return false;
     }
+  }
+
+  Future<void> loadToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    _token = prefs.getString('token');
+    notifyListeners();
   }
 }

@@ -1,9 +1,11 @@
 import 'package:ammerha_management/config/theme/app_theme.dart';
+import 'package:ammerha_management/core/provider/Department_Provider.dart';
 
 import 'package:ammerha_management/widgets/basics/dialog.dart';
 import 'package:ammerha_management/widgets/basics/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class Departments extends StatefulWidget {
   const Departments({super.key});
@@ -14,15 +16,29 @@ class Departments extends StatefulWidget {
 
 class _DepartmentsState extends State<Departments> {
   @override
+  void initState() {
+    super.initState();
+    // استدعاء البيانات أول ما تفتح الصفحة
+    Future.microtask(
+      () => Provider.of<DepartmentProvider>(
+        context,
+        listen: false,
+      ).getDepartments(),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final List<String> departments = [
-      "حماية الطفل",
-      "الطبي",
-      "البيئي",
-      "المرأة",
-      "التقني",
-      "دعم الشباب",
-    ];
+    final departmentProvider = Provider.of<DepartmentProvider>(context);
+    if (departmentProvider.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (departmentProvider.error != null) {
+      return Center(child: Text("خطأ: ${departmentProvider.error}"));
+    }
+    final departments = departmentProvider.departments;
+
     //استخدام الكوستم ديلالوغ
     void _showDeleteDialog(BuildContext context) {
       showDialog(
@@ -329,6 +345,7 @@ class _DepartmentsState extends State<Departments> {
           child: ListView.builder(
             itemCount: departments.length,
             itemBuilder: (context, index) {
+              final dept = departments[index];
               return Container(
                 height: 50,
                 margin: const EdgeInsets.symmetric(
@@ -355,7 +372,7 @@ class _DepartmentsState extends State<Departments> {
                     /// اسم القسم
                     Expanded(
                       child: Text(
-                        departments[index],
+                        dept.name,
                         style: const TextStyle(
                           fontSize: 16,
 

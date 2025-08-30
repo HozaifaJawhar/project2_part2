@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class CustomDrawer extends StatelessWidget {
   VolunteerProfilClass volunteerProfile = new VolunteerProfilClass(
-    profileImageUrl: 'profileImageUrl',
+    profileImageUrl: 'assets/images/profile.png',
     name: 'missan',
   );
 

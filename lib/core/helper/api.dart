@@ -6,18 +6,15 @@ import 'package:http/http.dart' as http;
 class Api {
   Future<dynamic> get({required String url, @required String? token}) async {
     Map<String, String> headers = {};
-
+    print('miiiiiiisssssssaaaaaaaaannnnnnnnnnnnnn');
     if (token != null) {
       headers.addAll({'Authorization': 'Bearer $token'});
     }
     http.Response response = await http.get(Uri.parse(url), headers: headers);
-    // print('ddddddddddd');
+
     print(response.statusCode);
-    // print('ddddddddddd');
+
     if (response.statusCode == 200 || response.statusCode == 201) {
-      // print('ddddddddddd');
-      // print(jsonDecode(response.body));
-      // print('ddddddddddd');
       return jsonDecode(response.body);
     } else if (response.statusCode == 404 ||
         response.statusCode == 400 ||
