@@ -1,8 +1,7 @@
+import 'package:ammerha_management/config/theme/app_theme.dart';
 import 'package:ammerha_management/core/provider/Department_Provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../config/theme/app_theme.dart';
 
 class Departments extends StatefulWidget {
   const Departments({super.key});

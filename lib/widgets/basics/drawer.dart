@@ -1,7 +1,11 @@
+import 'package:ammerha_management/config/routes/app_routes.dart';
+import 'package:ammerha_management/core/provider/auth_provider.dart';
+import 'package:ammerha_management/screens/drawer_screens/departments_screens/departments.dart';
+import 'package:provider/provider.dart';
+
 import '../../config/theme/app_theme.dart';
 import '../../core/models/volunteer_profil_class.dart';
 import '../../screens/administrative_page.dart';
-import '../../screens/drawer_screens/departments.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../screens/volunteers_page.dart';
@@ -37,7 +41,8 @@ class CustomDrawer extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => VolunteersPage()),
+                          builder: (context) => VolunteersPage(),
+                        ),
                       );
                     },
                   ),
@@ -48,7 +53,8 @@ class CustomDrawer extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => AdministrativePage()),
+                          builder: (context) => AdministrativePage(),
+                        ),
                       );
                     },
                   ),
@@ -88,19 +94,21 @@ class CustomDrawer extends StatelessWidget {
                     text: 'لوحة الشرف',
                     onTap: () {},
                   ),
-                  // Spacer pushes the logout item to the bottom of the column.
-                  // const Spacer(),
                   _buildDrawerItem(
                     icon: Icons.logout,
                     text: 'تسجيل الخروج',
                     color: Colors.red.shade700,
                     onTap: () {
-                      //   Navigator.pushNamedAndRemoveUntil(
-                      //     context,
-                      //     AppRoutes.loginRoute,
-                      //     // remove all previous routes from the stack.
-                      //     (Route<dynamic> route) => false,
-                      //   );
+                      Provider.of<AuthProvider>(
+                        context,
+                        listen: false,
+                      ).logout();
+                      // Go back to the login screen and delete everything
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        AppRoutes.loginRoute,
+                        (route) => false,
+                      );
                     },
                   ),
                 ],

@@ -1,17 +1,13 @@
 import 'dart:convert';
-
 import 'package:ammerha_management/config/constants/url.dart';
 import 'package:ammerha_management/core/models/departmentClass.dart';
-
 import 'package:ammerha_management/core/helper/api.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class DepartmentService {
   final Api _api = Api();
 
   Future<List<Department>> fetchDepartments() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
+    final token = 'hazoof';
 
     final responseData = await _api.get(
       url: '${AppString.baseUrl}/dashboard/departments/all',
@@ -29,14 +25,14 @@ class DepartmentService {
   }
 
   Future<Department> createDepartment(String name, String? description) async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
+    //final prefs = await SharedPreferences.getInstance();
+    //final token = prefs.getString('token');
 
     final body = {"name": name, "description": description};
 
     final responseData = await _api.post(
       url: '${AppString.baseUrl}/dashboard/departments/create',
-      token: token,
+      token: 'token',
       body: body,
     );
 
