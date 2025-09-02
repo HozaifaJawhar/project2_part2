@@ -1,9 +1,9 @@
-import 'package:ammerha_management/config/theme/app_theme.dart';
-import 'package:ammerha_management/core/models/event_class.dart';
-import 'package:ammerha_management/core/models/volunteer_profil_class.dart';
-import 'package:ammerha_management/screens/create_event.dart';
-import 'package:ammerha_management/widgets/basics/drawer.dart';
-import 'package:ammerha_management/widgets/events/event_card.dart';
+import '../config/theme/app_theme.dart';
+import '../core/models/event_class.dart';
+import '../core/models/volunteer_profil_class.dart';
+import 'create_event.dart';
+import '../widgets/basics/drawer.dart';
+import '../widgets/events/event_card.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -92,13 +92,11 @@ class _HomePageState extends State<HomePage> {
       leader: 'ali',
     ),
   ];
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-      },
+      onTap: () =>
+          FocusScope.of(context).unfocus(), // إلغاء الفوكس عند الضغط برّا
       child: Scaffold(
         backgroundColor: AppColors.white,
         appBar: AppBar(
@@ -244,8 +242,6 @@ class _HomePageState extends State<HomePage> {
                     : Padding(
                         padding: const EdgeInsets.only(left: 16, right: 16),
                         child: ListView.builder(
-                          keyboardDismissBehavior:
-                              ScrollViewKeyboardDismissBehavior.onDrag,
                           itemCount: events.length,
                           itemBuilder: (context, index) {
                             return OpportunityCard(event: events[index]);

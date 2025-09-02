@@ -28,7 +28,7 @@ class AppTheme {
       error: Colors.red,
       onError: AppColors.white,
       surface: AppColors.grey2,
-      onSurface: AppColors.black,
+      onSurface: AppColors.black, background: Colors.transparent,onBackground: Colors.transparent
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,

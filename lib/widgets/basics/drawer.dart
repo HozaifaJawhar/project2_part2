@@ -1,8 +1,10 @@
-import 'package:ammerha_management/config/theme/app_theme.dart';
-import 'package:ammerha_management/core/models/volunteer_profil_class.dart';
-import 'package:ammerha_management/screens/drawer_screens/departments.dart';
+import '../../config/theme/app_theme.dart';
+import '../../core/models/volunteer_profil_class.dart';
+import '../../screens/administrative_page.dart';
+import '../../screens/drawer_screens/departments.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../screens/volunteers_page.dart';
 
 class CustomDrawer extends StatelessWidget {
   VolunteerProfilClass volunteerProfile = new VolunteerProfilClass(
@@ -31,12 +33,24 @@ class CustomDrawer extends StatelessWidget {
                   _buildDrawerItem(
                     icon: Icons.groups_3_outlined,
                     text: 'المتطوعين',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => VolunteersPage()),
+                      );
+                    },
                   ),
                   _buildDrawerItem(
                     icon: Icons.group_outlined,
                     text: 'الإداريين',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AdministrativePage()),
+                      );
+                    },
                   ),
                   _buildDrawerItem(
                     icon: Icons.style_outlined,

@@ -1,5 +1,5 @@
-import 'package:ammerha_management/config/theme/app_theme.dart';
-import 'package:ammerha_management/core/models/event_class.dart';
+import '../config/theme/app_theme.dart';
+import '../core/models/event_class.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
