@@ -6,6 +6,7 @@ import 'package:ammerha_management/widgets/basics/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Departments extends StatefulWidget {
   const Departments({super.key});
@@ -40,11 +41,16 @@ class _DepartmentsState extends State<Departments> {
     final departments = departmentProvider.departments;
 
     //استخدام الكوستم ديلالوغ
-    void _showDeleteDialog(BuildContext context) {
+    void _showDeleteDialog(
+      BuildContext parentContext,
+
+      int id,
+      DepartmentProvider provider,
+    ) {
       showDialog(
-        context: context,
+        context: parentContext,
         barrierDismissible: false,
-        builder: (_) {
+        builder: (dialogContext) {
           return CustomConfirmationDialog(
             icon: Icons.warning_amber_rounded,
             iconColor: Colors.red,
@@ -52,22 +58,36 @@ class _DepartmentsState extends State<Departments> {
             cancelText: 'إلغاء',
             confirmText: 'حذف',
             confirmButtonColor: AppColors.primary,
-            onConfirm: () {
-              // كود الحذف الفعلي
-              print("تم الحذف ✅");
+            onConfirm: () async {
+              final prefs = await SharedPreferences.getInstance();
+              final token = prefs.getString('token');
+
+              bool success = await provider.deleteSection(id: id, token: token);
+
+              // أول شي سكري الديالوج
+
+              // بعدين اعرضي SnackBar باستخدام parentContext مثل ما عملتي بكود الإضافة
+              if (parentContext.mounted) {
+                ScaffoldMessenger.of(parentContext).showSnackBar(
+                  SnackBar(
+                    backgroundColor: success ? AppColors.primary : Colors.red,
+                    content: Text(success ? " تم الحذف بنجاح" : "❌ فشل الحذف"),
+                  ),
+                );
+              }
             },
           );
         },
       );
     }
 
-    void _showAddSectionDialog(BuildContext context) {
+    void _showAddSectionDialog(BuildContext parentContext) {
       TextEditingController sectionController = TextEditingController();
 
       showDialog(
-        context: context,
+        context: parentContext,
         barrierDismissible: false,
-        builder: (BuildContext context) {
+        builder: (BuildContext dialogContext) {
           return Directionality(
             textDirection: TextDirection.rtl,
             child: Dialog(
@@ -76,9 +96,9 @@ class _DepartmentsState extends State<Departments> {
                 borderRadius: BorderRadius.circular(16),
               ),
               child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minWidth: 350, // أقل عرض
-                  maxWidth: 500, // أكبر عرض
+                constraints: const BoxConstraints(
+                  minWidth: 350,
+                  maxWidth: 500,
                   minHeight: 200,
                 ),
                 child: Padding(
@@ -87,7 +107,6 @@ class _DepartmentsState extends State<Departments> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      // العنوان بالأعلى
                       Text(
                         "إضافة قسم",
                         textAlign: TextAlign.center,
@@ -105,8 +124,6 @@ class _DepartmentsState extends State<Departments> {
                           style: TextStyle(color: AppColors.secondaryBlack),
                         ),
                       ),
-
-                      // TextField لإضافة قسم
                       Directionality(
                         textDirection: TextDirection.rtl,
                         child: TextField(
@@ -143,19 +160,48 @@ class _DepartmentsState extends State<Departments> {
                         ),
                       ),
                       const SizedBox(height: 24),
-
-                      // زر إضافة
                       Center(
                         child: SizedBox(
-                          width: 160, // وسعي عرض الزر
-                          height: 50, // زيدي ارتفاعه
+                          width: 160,
+                          height: 50,
                           child: ElevatedButton(
-                            onPressed: () {
+                            onPressed: () async {
                               String sectionName = sectionController.text
                                   .trim();
                               if (sectionName.isNotEmpty) {
-                                Navigator.of(context).pop();
-                                // كود الإضافة الفعلي
+                                try {
+                                  await departmentProvider.addDepartment(
+                                    sectionName,
+                                    'any',
+                                  );
+
+                                  Navigator.of(
+                                    dialogContext,
+                                  ).pop(); // تسكير الديالوج
+
+                                  // استخدم الـ parentContext بدل context
+                                  ScaffoldMessenger.of(
+                                    parentContext,
+                                  ).showSnackBar(
+                                    SnackBar(
+                                      backgroundColor: AppColors.primary,
+                                      content: Text("تم إنشاء القسم بنجاح"),
+                                    ),
+                                  );
+                                } catch (e) {
+                                  Navigator.of(
+                                    dialogContext,
+                                  ).pop(); // ضروري نسكر الديالوج حتى بالخطأ
+
+                                  ScaffoldMessenger.of(
+                                    parentContext,
+                                  ).showSnackBar(
+                                    SnackBar(
+                                      backgroundColor: Colors.red,
+                                      content: Text("فشل إنشاء القسم: $e"),
+                                    ),
+                                  );
+                                }
                               }
                             },
                             style: ElevatedButton.styleFrom(
@@ -185,13 +231,20 @@ class _DepartmentsState extends State<Departments> {
       );
     }
 
-    void _showAddEditSectionDialog(BuildContext context) {
-      TextEditingController sectionController = TextEditingController();
+    void _showAddEditSectionDialog(
+      BuildContext context,
+      int deptId,
+      String currentName,
+      String token,
+    ) {
+      TextEditingController nameController = TextEditingController(
+        text: currentName,
+      );
 
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (BuildContext context) {
+        builder: (BuildContext dialogContext) {
           return Directionality(
             textDirection: TextDirection.rtl,
             child: Dialog(
@@ -200,9 +253,9 @@ class _DepartmentsState extends State<Departments> {
                 borderRadius: BorderRadius.circular(16),
               ),
               child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minWidth: 350, // أقل عرض
-                  maxWidth: 500, // أكبر عرض
+                constraints: const BoxConstraints(
+                  minWidth: 350,
+                  maxWidth: 500,
                   minHeight: 200,
                 ),
                 child: Padding(
@@ -211,7 +264,6 @@ class _DepartmentsState extends State<Departments> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      // العنوان بالأعلى
                       Text(
                         "تعديل قسم",
                         textAlign: TextAlign.center,
@@ -222,64 +274,78 @@ class _DepartmentsState extends State<Departments> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8, right: 12),
-                        child: Text(
-                          'اسم القسم',
-                          style: TextStyle(color: AppColors.secondaryBlack),
-                        ),
+                      Text(
+                        'اسم القسم',
+                        style: TextStyle(color: AppColors.secondaryBlack),
                       ),
-
-                      // TextField لإضافة قسم
-                      Directionality(
-                        textDirection: TextDirection.rtl,
-                        child: TextField(
-                          controller: sectionController,
-                          decoration: InputDecoration(
-                            hintText: "أدخل اسم القسم",
-                            hintStyle: GoogleFonts.almarai(
-                              color: AppColors.secondaryBlack.withOpacity(0.5),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 12,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(
-                                color: AppColors.secondaryBlack,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(
-                                color: AppColors.primary,
-                                width: 2,
-                              ),
-                            ),
-                            filled: true,
-                            fillColor: AppColors.secondaryWhite,
+                      const SizedBox(height: 8),
+                      TextField(
+                        controller: nameController,
+                        decoration: InputDecoration(
+                          hintText: "أدخل اسم القسم",
+                          hintStyle: GoogleFonts.almarai(
+                            color: AppColors.secondaryBlack.withOpacity(0.5),
                           ),
-                          style: GoogleFonts.almarai(
-                            color: AppColors.secondaryBlack,
-                            fontSize: 16,
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
                           ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: AppColors.secondaryBlack,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: AppColors.primary,
+                              width: 2,
+                            ),
+                          ),
+                          filled: true,
+                          fillColor: AppColors.secondaryWhite,
+                        ),
+                        style: GoogleFonts.almarai(
+                          color: AppColors.secondaryBlack,
+                          fontSize: 16,
                         ),
                       ),
                       const SizedBox(height: 24),
-
-                      // زر إضافة
                       Center(
                         child: SizedBox(
-                          width: 160, // وسعي عرض الزر
-                          height: 50, // زيدي ارتفاعه
+                          width: 160,
+                          height: 50,
                           child: ElevatedButton(
-                            onPressed: () {
-                              String sectionName = sectionController.text
-                                  .trim();
-                              if (sectionName.isNotEmpty) {
-                                Navigator.of(context).pop();
-                                // كود الإضافة الفعلي
+                            onPressed: () async {
+                              String updatedName = nameController.text.trim();
+
+                              if (updatedName.isNotEmpty) {
+                                Navigator.of(dialogContext).pop();
+
+                                bool success =
+                                    await Provider.of<DepartmentProvider>(
+                                      context,
+                                      listen: false,
+                                    ).updateDepartment(
+                                      id: deptId,
+                                      name: updatedName,
+                                      description: 'null', // ثابت دايمًا
+                                      token: token,
+                                    );
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    backgroundColor: success
+                                        ? AppColors.primary
+                                        : Colors.red,
+                                    content: Text(
+                                      success
+                                          ? " تم تعديل القسم بنجاح"
+                                          : " فشل تعديل القسم",
+                                    ),
+                                  ),
+                                );
                               }
                             },
                             style: ElevatedButton.styleFrom(
@@ -390,8 +456,23 @@ class _DepartmentsState extends State<Departments> {
                             Icons.edit_calendar_outlined,
                             color: Colors.amberAccent,
                           ),
-                          onPressed: () {
-                            _showAddEditSectionDialog(context);
+                          onPressed: () async {
+                            final prefs = await SharedPreferences.getInstance();
+                            final token = prefs.getString('token');
+
+                            if (token != null) {
+                              _showAddEditSectionDialog(
+                                context,
+                                dept.id,
+                                dept.name,
+
+                                token,
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text("❌لا يمكنك التعديل ")),
+                              );
+                            }
                           },
                         ),
                         IconButton(
@@ -400,7 +481,11 @@ class _DepartmentsState extends State<Departments> {
                             color: Colors.red,
                           ),
                           onPressed: () {
-                            _showDeleteDialog(context);
+                            _showDeleteDialog(
+                              context,
+                              dept.id,
+                              departmentProvider,
+                            );
                           },
                         ),
                       ],

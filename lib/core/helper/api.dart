@@ -119,4 +119,25 @@ class Api {
       // when you throw respose.body it will show if there something required in the body of the api...
     }
   }
+
+  Future<dynamic> delete({required String url, @required String? token}) async {
+    Map<String, String> headers = {'Accept': 'application/json'};
+
+    if (token != null) {
+      headers.addAll({'Authorization': 'Bearer $token'});
+    }
+
+    http.Response response = await http.delete(
+      Uri.parse(url),
+      headers: headers,
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var data = jsonDecode(response.body);
+      return data;
+    } else {
+      var errorData = jsonDecode(response.body);
+      throw Exception(errorData['message'] ?? 'Failed to delete resource');
+    }
+  }
 }
