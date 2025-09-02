@@ -6,8 +6,6 @@ import 'package:ammerha_management/screens/auth_screens/login.dart';
 
 import 'config/theme/app_theme.dart';
 import 'screens/home_page.dart';
-import 'config/theme/app_theme.dart';
-import 'screens/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
