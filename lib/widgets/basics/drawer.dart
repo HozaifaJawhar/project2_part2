@@ -1,6 +1,7 @@
 import 'package:ammerha_management/config/routes/app_routes.dart';
 import 'package:ammerha_management/core/provider/auth_provider.dart';
 import 'package:ammerha_management/screens/drawer_screens/departments_screens/departments.dart';
+import 'package:ammerha_management/screens/home_page.dart';
 import 'package:provider/provider.dart';
 
 import '../../config/theme/app_theme.dart';
@@ -34,6 +35,19 @@ class CustomDrawer extends StatelessWidget {
                 children: [
                   _buildDrawerHeader(context),
                   const SizedBox(height: 24),
+                  _buildDrawerItem(
+                    icon: Icons.home,
+                    text: 'الفعاليات',
+                    onTap: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const HomePage(),
+                        ),
+                        (route) => false, // بيمسح كل شي قبلها
+                      );
+                    },
+                  ),
                   _buildDrawerItem(
                     icon: Icons.groups_3_outlined,
                     text: 'المتطوعين',
