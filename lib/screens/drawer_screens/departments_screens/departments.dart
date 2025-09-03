@@ -63,13 +63,11 @@ class _DepartmentsState extends State<Departments> {
               final token = await _storage.read(key: 'auth_token');
               bool success = await provider.deleteSection(id: id, token: token);
 
-              // أول شي سكري الديالوج
-              // بعدين اعرضي SnackBar باستخدام parentContext مثل ما عملتي بكود الإضافة
               if (parentContext.mounted) {
                 ScaffoldMessenger.of(parentContext).showSnackBar(
                   SnackBar(
                     backgroundColor: success ? AppColors.primary : Colors.red,
-                    content: Text(success ? " تم الحذف بنجاح" : "❌ فشل الحذف"),
+                    content: Text(success ? " تم الحذف بنجاح" : " فشل الحذف"),
                   ),
                 );
               }
@@ -173,11 +171,8 @@ class _DepartmentsState extends State<Departments> {
                                     'any',
                                   );
 
-                                  Navigator.of(
-                                    dialogContext,
-                                  ).pop(); // تسكير الديالوج
+                                  Navigator.of(dialogContext).pop();
 
-                                  // استخدم الـ parentContext بدل context
                                   ScaffoldMessenger.of(
                                     parentContext,
                                   ).showSnackBar(
@@ -187,9 +182,7 @@ class _DepartmentsState extends State<Departments> {
                                     ),
                                   );
                                 } catch (e) {
-                                  Navigator.of(
-                                    dialogContext,
-                                  ).pop(); // ضروري نسكر الديالوج حتى بالخطأ
+                                  Navigator.of(dialogContext).pop();
 
                                   ScaffoldMessenger.of(
                                     parentContext,
@@ -333,12 +326,12 @@ class _DepartmentsState extends State<Departments> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     backgroundColor: success
-                                        ? Colors.green
+                                        ? AppColors.primary
                                         : Colors.red,
                                     content: Text(
                                       success
-                                          ? "✅ تم تعديل القسم بنجاح"
-                                          : "❌ فشل تعديل القسم",
+                                          ? " تم تعديل القسم بنجاح"
+                                          : " فشل تعديل القسم",
                                     ),
                                   ),
                                 );
