@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'package:ammerha_management/config/constants/url.dart';
 import 'package:ammerha_management/core/models/departmentClass.dart';
 import 'package:ammerha_management/core/helper/api.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class DepartmentService {
   final Api _api = Api();
+  final _storage = const FlutterSecureStorage();
 
   Future<List<Department>> fetchDepartments() async {
-    final token = 'hazoof';
+    final token = await _storage.read(key: 'auth_token');
 
     final responseData = await _api.get(
       url: '${AppString.baseUrl}/dashboard/departments/all',
@@ -25,14 +27,13 @@ class DepartmentService {
   }
 
   Future<Department> createDepartment(String name, String? description) async {
-    //final prefs = await SharedPreferences.getInstance();
-    //final token = prefs.getString('token');
+    final token = await _storage.read(key: 'auth_token');
 
     final body = {"name": name, "description": description};
 
     final responseData = await _api.post(
       url: '${AppString.baseUrl}/dashboard/departments/create',
-      token: 'token',
+      token: token,
       body: body,
     );
 
@@ -47,6 +48,7 @@ class DepartmentService {
     required int id,
     required String? token,
   }) async {
+    final token = await _storage.read(key: 'auth_token');
     final url = '${AppString.baseUrl}/dashboard/departments/delete/$id';
 
     return await _api.delete(url: url, token: token);

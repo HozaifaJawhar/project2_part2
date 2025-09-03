@@ -3,6 +3,7 @@ import 'package:ammerha_management/config/routes/app_routes.dart';
 import 'package:ammerha_management/config/theme/app_theme.dart';
 import 'package:ammerha_management/core/provider/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -69,22 +70,28 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.primary,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Apply the fade animation to the logo widget.
-            FadeTransition(
-              opacity: _fadeAnimation,
-              child: Image.asset(
-                'assets/logos/logo2.png',
-                width: MediaQuery.of(context).size.width,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: AppColors.primary,
+        statusBarIconBrightness: Brightness.light,
+      ),
+      child: Scaffold(
+        backgroundColor: AppColors.primary,
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Apply the fade animation to the logo widget.
+              FadeTransition(
+                opacity: _fadeAnimation,
+                child: Image.asset(
+                  'assets/logos/logo2.png',
+                  width: MediaQuery.of(context).size.width,
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-          ],
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );
