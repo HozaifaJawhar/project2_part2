@@ -326,7 +326,7 @@ class _DepartmentsState extends State<Departments> {
                                     ).updateDepartment(
                                       id: deptId,
                                       name: updatedName,
-                                      description: null, // ثابت دايمًا
+                                      description: "null", // ثابت دايمًا
                                       token: token,
                                     );
 
