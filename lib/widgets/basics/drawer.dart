@@ -63,11 +63,6 @@ class CustomDrawer extends StatelessWidget {
                     text: 'طلبات التطوع',
                     onTap: () {},
                   ),
-                  _buildDrawerItem(
-                    icon: Icons.group_add_outlined,
-                    text: 'إضافة إداري جديد',
-                    onTap: () {},
-                  ),
 
                   _buildDrawerItem(
                     icon: Icons.add_box_outlined,
@@ -79,11 +74,7 @@ class CustomDrawer extends StatelessWidget {
                       );
                     },
                   ),
-                  _buildDrawerItem(
-                    icon: Icons.add,
-                    text: 'إضافة رول إداري جديد',
-                    onTap: () {},
-                  ),
+
                   _buildDrawerItem(
                     icon: Icons.newspaper,
                     text: 'الأخبار',
