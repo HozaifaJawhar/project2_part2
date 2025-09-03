@@ -1,7 +1,7 @@
-import 'package:ammerha_management/config/theme/app_theme.dart';
-import 'package:ammerha_management/core/models/event_class.dart';
-import 'package:ammerha_management/screens/drawer_screens/events_screens/edit_event_info.dart';
-import 'package:ammerha_management/screens/drawer_screens/events_screens/event_details_screen.dart';
+import '../../config/theme/app_theme.dart';
+import '../../core/models/event_class.dart';
+import '../../screens/edit_event_info.dart';
+import '../../screens/event_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

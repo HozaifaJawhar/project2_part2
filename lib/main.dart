@@ -1,23 +1,10 @@
-import 'package:ammerha_management/config/routes/app_routes.dart';
-import 'package:ammerha_management/config/routes/route_generator.dart';
-import 'package:ammerha_management/core/provider/Department_Provider.dart';
-import 'package:ammerha_management/core/provider/auth_provider.dart';
-
 import 'config/theme/app_theme.dart';
+import 'screens/home_page.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => AuthProvider()),
-        ChangeNotifierProvider(create: (context) => DepartmentProvider()),
-      ],
-      child: MyApp(),
-    ),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -28,10 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      // home: LoginScreen(),
-      initialRoute: AppRoutes.splashRoute,
-      // Handles all named route generation via the RouteGenerator class.
-      onGenerateRoute: RouteGenerator.generateRoute,
+      home: HomePage(),
     );
   }
 }

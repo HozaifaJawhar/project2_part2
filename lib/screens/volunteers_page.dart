@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../config/theme/app_theme.dart';
 import '../widgets/volunteers.dart';
 
 class VolunteersPage extends StatefulWidget {
@@ -92,7 +92,7 @@ class _VolunteersPageState extends State<VolunteersPage> {
             ),
           ),
         ),
-        backgroundColor: Color(0xFF2E4A8B),
+        backgroundColor: AppColors.primary,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
         actions: [
@@ -126,8 +126,10 @@ class _VolunteersPageState extends State<VolunteersPage> {
                       ],
                     ),
                     child: IconButton(
-                      icon: Icon(Icons.filter_alt_sharp,
-                          color: Color(0xFF2E4A8B)),
+                      icon: Icon(
+                        Icons.filter_alt_sharp,
+                        color: AppColors.primary,
+                      ),
                       onPressed: _showFilterDialog,
                     ),
                   ),
@@ -175,7 +177,7 @@ class _VolunteersPageState extends State<VolunteersPage> {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF2E4A8B),
+                      color: AppColors.primary,
                     ),
                   ),
                   SizedBox(height: 8),
@@ -194,8 +196,8 @@ class _VolunteersPageState extends State<VolunteersPage> {
                                     });
                                   },
                                   selectedColor:
-                                      Color(0xFF2E4A8B).withOpacity(0.2),
-                                  checkmarkColor: Color(0xFF2E4A8B),
+                                      AppColors.primary.withOpacity(0.2),
+                                  checkmarkColor: AppColors.primary,
                                 ),
                               ))
                           .toList(),
@@ -247,10 +249,9 @@ class _VolunteersPageState extends State<VolunteersPage> {
               // TODO: Replace this with NetworkImage or AssetImage
               // Example: DecorationImage(image: NetworkImage(volunteer.photoUrl), fit: BoxFit.cover)
             ),
-            child: Icon(
-              Icons.person,
-              color: Colors.grey[600],
-              size: 24,
+            child: const Image(
+              image: AssetImage("assets/images/profile.png"),
+              fit: BoxFit.cover,
             ),
           ),
           SizedBox(width: 12),
@@ -283,7 +284,7 @@ class _VolunteersPageState extends State<VolunteersPage> {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: Color(0xFF2E4A8B).withOpacity(0.1),
+              color: AppColors.primary.withOpacity(0.1),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Row(
@@ -308,7 +309,7 @@ class _VolunteersPageState extends State<VolunteersPage> {
                 Text(
                   '${volunteer.opportunities} فرصة',
                   style: TextStyle(
-                    color: Color(0xFF2E4A8B),
+                    color: AppColors.primary,
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),
