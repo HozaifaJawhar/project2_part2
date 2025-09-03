@@ -1,4 +1,5 @@
 import 'package:ammerha_management/screens/drawer_screens/events_screens/create_event.dart';
+import 'package:ammerha_management/widgets/basics/search_textfield.dart';
 import '../config/theme/app_theme.dart';
 import '../core/models/event_class.dart';
 import '../core/models/volunteer_profil_class.dart';
@@ -173,51 +174,7 @@ class _HomePageState extends State<HomePage> {
                         padding: const EdgeInsets.only(left: 16, right: 8),
                         child: SizedBox(
                           height: 50,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color.fromARGB(
-                                    255,
-                                    224,
-                                    220,
-                                    220,
-                                  ), // لون الظل
-                                  blurRadius: 1, // نعومة الظل
-                                  offset: const Offset(
-                                    1,
-                                    1,
-                                  ), // اتجاهه (0,0) = كل الجهات
-                                ),
-                              ],
-                            ),
-                            child: TextField(
-                              decoration: InputDecoration(
-                                hintText: 'البحث عن فرصة',
-
-                                fillColor: AppColors.white,
-                                suffixIcon: const Icon(Icons.search),
-                                suffixIconColor: AppColors.grey2,
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(
-                                    color: AppColors
-                                        .grey2, // لون البوردر قبل الضغط
-                                    width: 1.5,
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(
-                                    color: AppColors
-                                        .primary, // لون البوردر عند الضغط
-                                    width: 2,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                          child: SearchTextfield(hintText: 'البحث عن فرصة'),
                         ),
                       ),
                     ),
