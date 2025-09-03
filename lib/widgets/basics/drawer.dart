@@ -2,6 +2,7 @@ import 'package:ammerha_management/config/routes/app_routes.dart';
 import 'package:ammerha_management/core/provider/auth_provider.dart';
 import 'package:ammerha_management/screens/drawer_screens/departments_screens/departments.dart';
 import 'package:ammerha_management/screens/home_page.dart';
+import 'package:ammerha_management/screens/honor_board.dart';
 import 'package:provider/provider.dart';
 
 import '../../config/theme/app_theme.dart';
@@ -97,7 +98,14 @@ class CustomDrawer extends StatelessWidget {
                   _buildDrawerItem(
                     icon: Icons.celebration_outlined,
                     text: 'لوحة الشرف',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HonorBoardScreen(),
+                        ),
+                      );
+                    },
                   ),
                   _buildDrawerItem(
                     icon: Icons.logout,
