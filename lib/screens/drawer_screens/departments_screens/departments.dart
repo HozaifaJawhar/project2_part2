@@ -32,14 +32,6 @@ class _DepartmentsState extends State<Departments> {
     final departmentProvider = Provider.of<DepartmentProvider>(context);
     final _storage = const FlutterSecureStorage();
 
-    if (departmentProvider.isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    if (departmentProvider.error != null) {
-      return Center(child: Text("خطأ: ${departmentProvider.error}"));
-    }
-
     final departments = departmentProvider.departments;
 
     //استخدام الكوستم ديلالوغ
@@ -393,97 +385,111 @@ class _DepartmentsState extends State<Departments> {
         ],
       ),
       drawer: CustomDrawer(),
-      body: Directionality(
-        textDirection: TextDirection.rtl,
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: ListView.builder(
-            itemCount: departments.length,
-            itemBuilder: (context, index) {
-              final dept = departments[index];
-              return Container(
-                height: 50,
-                margin: const EdgeInsets.symmetric(
-                  vertical: 4,
-                ), // مسافة بين العناصر
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 10,
+      body: departmentProvider.isLoading
+          ? Container(
+              color: AppColors.white, // 🎨 اللون اللي بدك ياه للخلفية
+              child: const Center(
+                child: CircularProgressIndicator(
+                  color: AppColors.primary, // 🎨 لون المؤشر
                 ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(18),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 8,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  textDirection: TextDirection.rtl, // لضبط المحاذاة من اليمين
-                  children: [
-                    /// اسم القسم
-                    Expanded(
-                      child: Text(
-                        dept.name,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
-                        ),
+              ),
+            )
+          : departmentProvider.error != null
+          ? Center(child: Text("حدث خطأ: ${departmentProvider.error}"))
+          : Directionality(
+              textDirection: TextDirection.rtl,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: ListView.builder(
+                  itemCount: departments.length,
+                  itemBuilder: (context, index) {
+                    final dept = departments[index];
+                    return Container(
+                      height: 50,
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 4,
+                      ), // مسافة بين العناصر
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 10,
                       ),
-                    ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(18),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 8,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        textDirection:
+                            TextDirection.rtl, // لضبط المحاذاة من اليمين
+                        children: [
+                          /// اسم القسم
+                          Expanded(
+                            child: Text(
+                              dept.name,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
 
-                    /// أيقونات (تعديل + حذف)
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            Icons.edit_calendar_outlined,
-                            color: Colors.amberAccent,
+                          /// أيقونات (تعديل + حذف)
+                          Row(
+                            children: [
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.edit_calendar_outlined,
+                                  color: Colors.amberAccent,
+                                ),
+                                onPressed: () async {
+                                  final token = await _storage.read(
+                                    key: 'auth_token',
+                                  );
+                                  if (token != null) {
+                                    _showAddEditSectionDialog(
+                                      context,
+                                      dept.id,
+                                      dept.name,
+                                      token,
+                                    );
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text("❌لا يمكنك التعديل "),
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.delete_outlined,
+                                  color: Colors.red,
+                                ),
+                                onPressed: () {
+                                  _showDeleteDialog(
+                                    context,
+                                    dept.id,
+                                    departmentProvider,
+                                  );
+                                },
+                              ),
+                            ],
                           ),
-                          onPressed: () async {
-                            final token = await _storage.read(
-                              key: 'auth_token',
-                            );
-                            if (token != null) {
-                              _showAddEditSectionDialog(
-                                context,
-                                dept.id,
-                                dept.name,
-                                token,
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("❌لا يمكنك التعديل ")),
-                              );
-                            }
-                          },
-                        ),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.delete_outlined,
-                            color: Colors.red,
-                          ),
-                          onPressed: () {
-                            _showDeleteDialog(
-                              context,
-                              dept.id,
-                              departmentProvider,
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
-        ),
-      ),
+              ),
+            ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showAddSectionDialog(context);

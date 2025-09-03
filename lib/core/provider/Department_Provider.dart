@@ -15,6 +15,7 @@ class DepartmentProvider with ChangeNotifier {
 
   Future<void> getDepartments() async {
     _isLoading = true;
+
     notifyListeners();
 
     try {

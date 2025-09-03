@@ -36,7 +36,7 @@ class CustomDrawer extends StatelessWidget {
                   _buildDrawerHeader(context),
                   const SizedBox(height: 24),
                   _buildDrawerItem(
-                    icon: Icons.home,
+                    icon: Icons.home_outlined,
                     text: 'الفعاليات',
                     onTap: () {
                       Navigator.pushAndRemoveUntil(
@@ -79,7 +79,7 @@ class CustomDrawer extends StatelessWidget {
                   ),
 
                   _buildDrawerItem(
-                    icon: Icons.add_box_outlined,
+                    icon: Icons.dashboard_outlined,
                     text: 'إدارة الأقسام التطوعية ',
                     onTap: () {
                       Navigator.push(
