@@ -64,7 +64,7 @@ class CustomDrawer extends StatelessWidget {
                   ),
                   _buildDrawerItem(
                     icon: Icons.group_outlined,
-                    text: 'الإداريين',
+                    text: 'الفريق الإداري',
                     onTap: () {
                       Navigator.push(
                         context,

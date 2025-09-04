@@ -1,4 +1,6 @@
 import 'package:ammerha_management/screens/user_account_page.dart';
+import 'package:ammerha_management/widgets/basics/drawer.dart';
+import 'package:ammerha_management/widgets/basics/search_textfield.dart';
 import 'package:flutter/material.dart';
 import '../config/theme/app_theme.dart';
 import '../widgets/administrator.dart';
@@ -16,32 +18,41 @@ class _AdministrativePageState extends State<AdministrativePage> {
 
   List<Administrator> _administrators = [
     Administrator(
-        id: '1',
-        name: 'حذيفة إبراهيم جوهر',
-        position: 'منسق',
-        department: 'قسم التطوع'),
+      id: '1',
+      name: 'حذيفة إبراهيم جوهر',
+      position: 'منسق',
+      department: 'قسم التطوع',
+    ),
     Administrator(
-        id: '2',
-        name: 'أحمد محمد سعيد',
-        position: 'HR',
-        department: 'الموارد البشرية'),
+      id: '2',
+      name: 'أحمد محمد سعيد',
+      position: 'HR',
+      department: 'الموارد البشرية',
+    ),
     Administrator(
-        id: '3',
-        name: 'فاطمة علي حسن',
-        position: 'HR',
-        department: 'الموارد البشرية'),
+      id: '3',
+      name: 'فاطمة علي حسن',
+      position: 'HR',
+      department: 'الموارد البشرية',
+    ),
     Administrator(
-        id: '4',
-        name: 'محمد عبد الله',
-        position: 'HR',
-        department: 'الموارد البشرية'),
+      id: '4',
+      name: 'محمد عبد الله',
+      position: 'HR',
+      department: 'الموارد البشرية',
+    ),
     Administrator(
-        id: '5',
-        name: 'سارة يوسف',
-        position: 'HR',
-        department: 'الموارد البشرية'),
+      id: '5',
+      name: 'سارة يوسف',
+      position: 'HR',
+      department: 'الموارد البشرية',
+    ),
     Administrator(
-        id: '6', name: 'خالد أحمد', position: 'منسق', department: 'قسم التطوع'),
+      id: '6',
+      name: 'خالد أحمد',
+      position: 'منسق',
+      department: 'قسم التطوع',
+    ),
   ];
 
   List<Administrator> get _filteredAdministrators {
@@ -53,10 +64,12 @@ class _AdministrativePageState extends State<AdministrativePage> {
 
     if (_searchController.text.isNotEmpty) {
       filtered = filtered
-          .where((a) =>
-              a.name.contains(_searchController.text) ||
-              a.position.contains(_searchController.text) ||
-              a.department.contains(_searchController.text))
+          .where(
+            (a) =>
+                a.name.contains(_searchController.text) ||
+                a.position.contains(_searchController.text) ||
+                a.department.contains(_searchController.text),
+          )
           .toList();
     }
 
@@ -65,64 +78,46 @@ class _AdministrativePageState extends State<AdministrativePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        title: Center(
-          child: Text(
-            'الفريق الإداري',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        backgroundColor: Colors.grey[100],
+        appBar: AppBar(
+          title: Center(
+            child: Text(
+              'الفريق الإداري',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
           ),
+          iconTheme: const IconThemeData(color: Colors.white),
+          backgroundColor: AppColors.primary,
+          elevation: 0,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.notifications_outlined, color: Colors.white),
+              onPressed: () {},
+            ),
+          ],
         ),
-        iconTheme: const IconThemeData(color: Colors.white),
-        backgroundColor: AppColors.primary,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.notifications_outlined, color: Colors.white),
-            onPressed: () {},
-          ),
-        ],
-      ),
-      body: Directionality(
-        textDirection: TextDirection.rtl,
-        child: Column(
-          children: [
-            Container(
-              color: Colors.white,
-              padding: EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      // More circular border
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 4,
-                          offset: Offset(0, 2),
-                          spreadRadius: 1,
-                        ),
-                      ],
-                    ),
-                    child: IconButton(
-                      icon: Icon(Icons.filter_alt_sharp,
-                          color: AppColors.primary),
-                      onPressed: _showFilterDialog,
-                    ),
-                  ),
-                  SizedBox(width: 12),
-                  Expanded(
-                    child: Container(
+        drawer: CustomDrawer(),
+        body: Directionality(
+          textDirection: TextDirection.rtl,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                // color: Colors.white,
+                padding: EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(10),
                         // More circular border
                         boxShadow: [
                           BoxShadow(
@@ -133,85 +128,77 @@ class _AdministrativePageState extends State<AdministrativePage> {
                           ),
                         ],
                       ),
-                      child: TextField(
-                        controller: _searchController,
-                        onChanged: (value) => setState(() {}),
-                        decoration: InputDecoration(
-                          hintText: 'البحث عن إداري',
-                          suffixIcon:
-                              Icon(Icons.search, color: Colors.grey[400]),
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 12),
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.filter_alt_sharp,
+                          color: AppColors.primary,
                         ),
+                        onPressed: _showFilterDialog,
                       ),
                     ),
-                  ),
-                ],
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(30),
+                          // More circular border
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 4,
+                              offset: Offset(0, 2),
+                              spreadRadius: 1,
+                            ),
+                          ],
+                        ),
+                        child: SearchTextfield(hintText: 'البحث عن إداري'),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Container(
-              color: Colors.white,
-              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-              child: Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'الإداريين (كل الأقسام)',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primary,
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      'الإداريين (كل الأقسام)',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primary,
+                      ),
+                      textAlign: TextAlign.right,
                     ),
                   ),
                   SizedBox(height: 8),
-                  Row(
-                    children: _filters
-                        .map(
-                          (filter) => Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 4),
-                            child: FilterChip(
-                              label: Text(filter),
-                              selected: _selectedFilter == filter,
-                              onSelected: (selected) {
-                                setState(() {
-                                  _selectedFilter = filter;
-                                });
-                              },
-                              selectedColor:
-                                  AppColors.primary.withOpacity(0.2),
-                              checkmarkColor: AppColors.primary,
-                            ),
-                          ),
-                        )
-                        .toList(),
-                  ),
                 ],
               ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                padding: EdgeInsets.all(16),
-                itemCount: _filteredAdministrators.length,
-                itemBuilder: (context, index) {
-                  final admin = _filteredAdministrators[index];
-                  return _buildAdministratorCard(admin);
-                },
+              Expanded(
+                child: ListView.builder(
+                  padding: EdgeInsets.all(16),
+                  itemCount: _filteredAdministrators.length,
+                  itemBuilder: (context, index) {
+                    final admin = _filteredAdministrators[index];
+                    return _buildAdministratorCard(admin);
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => CreateAccountPage()),
-          );
-        },
-        backgroundColor: AppColors.primary,
-        child: Icon(Icons.add, color: Colors.white),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CreateAccountPage()),
+            );
+          },
+          backgroundColor: AppColors.primary,
+          child: Icon(Icons.add, color: Colors.white),
+        ),
       ),
     );
   }
@@ -221,8 +208,7 @@ class _AdministrativePageState extends State<AdministrativePage> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-              builder: (context) => UserAccountPage()),
+          MaterialPageRoute(builder: (context) => UserAccountPage()),
         );
       },
       child: Container(
@@ -248,8 +234,6 @@ class _AdministrativePageState extends State<AdministrativePage> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.grey[300],
-                // TODO: Replace this with NetworkImage or AssetImage
-                // Example: DecorationImage(image: NetworkImage(volunteer.photoUrl), fit: BoxFit.cover)
               ),
               child: const Image(
                 image: AssetImage("assets/images/profile.png"),
@@ -273,10 +257,7 @@ class _AdministrativePageState extends State<AdministrativePage> {
                   ),
                   Text(
                     admin.department,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                     textAlign: TextAlign.right,
                   ),
                 ],
@@ -323,17 +304,19 @@ class _AdministrativePageState extends State<AdministrativePage> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: _filters
-              .map((filter) => RadioListTile<String>(
-                    title: Text(filter),
-                    value: filter,
-                    groupValue: _selectedFilter,
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedFilter = value!;
-                      });
-                      Navigator.pop(context);
-                    },
-                  ))
+              .map(
+                (filter) => RadioListTile<String>(
+                  title: Text(filter),
+                  value: filter,
+                  groupValue: _selectedFilter,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedFilter = value!;
+                    });
+                    Navigator.pop(context);
+                  },
+                ),
+              )
               .toList(),
         ),
       ),
