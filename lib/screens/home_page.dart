@@ -30,6 +30,11 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Future<void> _refresh(BuildContext context) async {
+    final token = await _storage.read(key: 'auth_token'); // ← نفس المفتاح
+    await context.read<EventsProvider>().refresh(token: token);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<EventsProvider>(
@@ -80,99 +85,108 @@ class _HomePageState extends State<HomePage> {
                       return const Center(child: CircularProgressIndicator());
                     }
                     if (provider.error != null) {
-                      return Center(child: Text('خطأ: ${provider.error}'));
+                      return RefreshIndicator(
+                        onRefresh: () => _refresh(context), // NEW
+                        child: ListView(
+                          physics: const AlwaysScrollableScrollPhysics(), // NEW
+                          children: [
+                            const SizedBox(height: 120),
+                            Center(child: Text('خطأ: ${provider.error}')),
+                          ],
+                        ),
+                      );
                     }
-                    if (provider.events.isEmpty) {
-                      return const Center(child: Text("لا توجد فعاليات بعد"));
-                    }
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 18),
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 16),
-                                child: Container(
-                                  height: 48,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                      color: AppColors.grey2,
-                                      width: 1,
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: const Color.fromARGB(
-                                          255,
-                                          224,
-                                          220,
-                                          220,
-                                        ), // لون الظل
-                                        blurRadius: 2, // نعومة الظل
-                                        offset: const Offset(
-                                          1,
-                                          1,
-                                        ), // اتجاهه (0,0) = كل الجهات
+                    return RefreshIndicator(
+                      onRefresh: () => _refresh(context),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 18),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 16),
+                                  child: Container(
+                                    height: 48,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(
+                                        color: AppColors.grey2,
+                                        width: 1,
                                       ),
-                                    ],
-                                  ),
-                                  padding: const EdgeInsets.all(8),
-                                  child: const Icon(
-                                    size: 30,
-                                    Icons.filter_alt,
-                                    color: AppColors.primary,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 16,
-                                    right: 8,
-                                  ),
-                                  child: SizedBox(
-                                    height: 50,
-                                    child: SearchTextfield(
-                                      hintText: 'البحث عن فرصة',
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: const Color.fromARGB(
+                                            255,
+                                            224,
+                                            220,
+                                            220,
+                                          ), // لون الظل
+                                          blurRadius: 2, // نعومة الظل
+                                          offset: const Offset(
+                                            1,
+                                            1,
+                                          ), // اتجاهه (0,0) = كل الجهات
+                                        ),
+                                      ],
+                                    ),
+                                    padding: const EdgeInsets.all(8),
+                                    child: const Icon(
+                                      size: 30,
+                                      Icons.filter_alt,
+                                      color: AppColors.primary,
                                     ),
                                   ),
                                 ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: 16,
+                                      right: 8,
+                                    ),
+                                    child: SizedBox(
+                                      height: 50,
+                                      child: SearchTextfield(
+                                        hintText: 'البحث عن فرصة',
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 16, right: 16),
+                            child: Text(
+                              'الفرص القائمة',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontFamily: 'Cairo',
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.w800,
                               ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 16, right: 16),
-                          child: Text(
-                            'الفرص القائمة',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontFamily: 'Cairo',
-                              color: AppColors.primary,
-                              fontWeight: FontWeight.w800,
                             ),
                           ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                              left: 16,
-                              right: 16,
-                              top: 8,
-                            ),
-                            child: ListView.builder(
-                              itemCount: provider.events.length,
-                              itemBuilder: (context, index) {
-                                final event = provider.events[index];
-                                return OpportunityCard(event: event);
-                              },
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                left: 16,
+                                right: 16,
+                                top: 8,
+                              ),
+                              child: ListView.builder(
+                                itemCount: provider.events.length,
+                                itemBuilder: (context, index) {
+                                  final event = provider.events[index];
+                                  return OpportunityCard(event: event);
+                                },
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     );
                   },
                 ),

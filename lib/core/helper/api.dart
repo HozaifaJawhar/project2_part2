@@ -54,22 +54,7 @@ class Api {
       var data = jsonDecode(response.body);
       print('///$data///');
       return data;
-    }
-    // else if (response.statusCode == 403) {
-    //   print(response.statusCode);
-    //   var data = jsonDecode(response.body);
-    //   print('///$data///');
-    //   return data;
-    // }
-    // else if (response.statusCode == 400 ||
-    //     response.statusCode == 500 ||
-    //     response.statusCode == 401) {
-    //   print(response.statusCode);
-    //   var data = jsonDecode(response.body);
-    //   print('///$data///');
-    //   return data;
-    //}
-    else {
+    } else {
       var errorData = jsonDecode(response.body);
       throw Exception(errorData['message'] ?? 'Failed to execute request');
     }
@@ -137,6 +122,7 @@ class Api {
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
+      print('data deleted correctly with statrus code ${response.statusCode}');
       var data = jsonDecode(response.body);
       return data;
     } else {

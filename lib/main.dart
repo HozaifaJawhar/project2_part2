@@ -1,7 +1,10 @@
 import 'package:ammerha_management/config/routes/app_routes.dart';
 import 'package:ammerha_management/config/routes/route_generator.dart';
+import 'package:ammerha_management/core/helper/api.dart';
+import 'package:ammerha_management/core/provider/%20events%20management/events_provider.dart';
 import 'package:ammerha_management/core/provider/Department_Provider.dart';
 import 'package:ammerha_management/core/provider/auth_provider.dart';
+import 'package:ammerha_management/core/services/events_service.dart';
 import 'config/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +16,9 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => AuthProvider()),
         ChangeNotifierProvider(create: (context) => DepartmentProvider()),
+        ChangeNotifierProvider(
+          create: (_) => EventsProvider(EventsService(Api())),
+        ),
       ],
       child: MyApp(),
     ),

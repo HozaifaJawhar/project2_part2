@@ -1,8 +1,13 @@
+import 'package:ammerha_management/config/constants/url.dart';
+import 'package:ammerha_management/core/helper/build_image_url.dart';
 import 'package:ammerha_management/core/models/event.dart';
 import 'package:ammerha_management/config/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
+import 'package:ammerha_management/core/provider/%20events%20management/events_provider.dart';
 
 class OpportunityCard extends StatelessWidget {
   final Event event;
@@ -11,17 +16,44 @@ class OpportunityCard extends StatelessWidget {
 
   String _formatDate(DateTime? dt) {
     if (dt == null) return '—';
-    // يمكنك تغيير التنسيق كما تحب
     return DateFormat('yyyy/MM/dd - HH:mm').format(dt.toLocal());
   }
 
   @override
   Widget build(BuildContext context) {
-    void _showDeleteConfirmationDialog(BuildContext context) {
+    final outerCtx = context;
+
+    Future<void> _handleDelete() async {
+      const secure = FlutterSecureStorage();
+      final token = await secure.read(key: 'auth_token');
+
+      if (token == null || token.isEmpty) {
+        ScaffoldMessenger.of(
+          outerCtx,
+        ).showSnackBar(const SnackBar(content: Text('فشل الحصول على التوكن')));
+        return;
+      }
+
+      final provider = outerCtx.read<EventsProvider>();
+      final ok = await provider.deleteEvent(token: token, eventId: event.id);
+
+      if (ok) {
+        ScaffoldMessenger.of(
+          outerCtx,
+        ).showSnackBar(const SnackBar(content: Text('تم حذف الفعالية')));
+      } else {
+        final err = provider.deleteError ?? 'فشل حذف الفعالية';
+        ScaffoldMessenger.of(
+          outerCtx,
+        ).showSnackBar(SnackBar(content: Text(err)));
+      }
+    }
+
+    void _showDeleteConfirmationDialog(BuildContext ctx) {
       showDialog(
-        context: context,
+        context: ctx,
         barrierDismissible: false, // ما بيسكر إلا بزر
-        builder: (BuildContext context) {
+        builder: (BuildContext dialogCtx) {
           return Dialog(
             backgroundColor: AppColors.white,
             shape: RoundedRectangleBorder(
@@ -32,8 +64,7 @@ class OpportunityCard extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // أيقونة تحذير
-                  Icon(
+                  const Icon(
                     Icons.warning_amber_rounded,
                     color: Colors.red,
                     size: 40,
@@ -55,7 +86,7 @@ class OpportunityCard extends StatelessWidget {
                       // زر إلغاء
                       ElevatedButton(
                         onPressed: () {
-                          Navigator.of(context).pop(); // بسكر الحوار
+                          Navigator.of(dialogCtx).pop(); // بسكر الحوار
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.secondaryWhite,
@@ -78,9 +109,9 @@ class OpportunityCard extends StatelessWidget {
                       ),
                       // زر حذف
                       ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          // هون بتحطي كود الحذف الفعلي
+                        onPressed: () async {
+                          Navigator.of(dialogCtx).pop(); // أغلق الحوار أولًا
+                          await _handleDelete(); // نفّذ الحذف المتفائل عبر البروفايدر
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
@@ -112,12 +143,13 @@ class OpportunityCard extends StatelessWidget {
     }
 
     final String dateText = _formatDate(event.date);
+
     return GestureDetector(
       onTap: () {
-        //   Navigator.push(
+        // Navigator.push(
         //   context,
         //   MaterialPageRoute(
-        //     builder: (_) => EventDetailsScreen(eventId: event.id), // ← بالمعرّف فقط
+        //     builder: (_) => EventDetailsScreen(eventId: event.id),
         //   ),
         // );
       },
@@ -126,15 +158,10 @@ class OpportunityCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey,
-              blurRadius: 1,
-              offset: const Offset(1, 1),
-            ),
+          boxShadow: const [
+            BoxShadow(color: Colors.grey, blurRadius: 1, offset: Offset(1, 1)),
           ],
         ),
-
         child: Row(
           children: [
             // صورة الفعالية
@@ -160,7 +187,6 @@ class OpportunityCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 6),
-                  // أزرار (تعديل / حذف)
                   Row(
                     children: [
                       const Icon(
@@ -168,14 +194,14 @@ class OpportunityCard extends StatelessWidget {
                         Icons.date_range_outlined,
                         color: AppColors.primary,
                       ),
-                      SizedBox(width: 3),
+                      const SizedBox(width: 3),
                       Text(
                         dateText,
                         style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                       ),
                     ],
                   ),
-                  SizedBox(height: 6),
+                  const SizedBox(height: 6),
                   Row(
                     children: [
                       GestureDetector(
@@ -193,11 +219,9 @@ class OpportunityCard extends StatelessWidget {
                           color: Colors.amberAccent,
                         ),
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       GestureDetector(
-                        onTap: () {
-                          _showDeleteConfirmationDialog(context);
-                        },
+                        onTap: () => _showDeleteConfirmationDialog(context),
                         child: const Icon(
                           size: 22,
                           Icons.delete_outlined,
@@ -229,7 +253,7 @@ class OpportunityCard extends StatelessWidget {
                     bottomLeft: Radius.circular(12),
                   ),
                 ),
-                child: Center(
+                child: const Center(
                   child: Icon(Icons.arrow_forward, color: AppColors.white),
                 ),
               ),
@@ -247,8 +271,9 @@ class _EventCoverImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (url == null || url!.isEmpty) {
-      // صورة افتراضية من الأصول لو ما في URL
+    final normalized = BuildImageUrl.normalize(url, AppString.baseUrl);
+
+    if (normalized.isEmpty) {
       return const Image(
         image: AssetImage('assets/images/event_image.jpg'),
         width: 75,
@@ -258,7 +283,7 @@ class _EventCoverImage extends StatelessWidget {
     }
 
     return Image.network(
-      url!,
+      normalized,
       width: 75,
       height: 75,
       fit: BoxFit.cover,
@@ -268,7 +293,6 @@ class _EventCoverImage extends StatelessWidget {
         height: 75,
         fit: BoxFit.cover,
       ),
-      // بإمكانك إضافة loadingBuilder إن حبيت
     );
   }
 }
