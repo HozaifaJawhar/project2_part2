@@ -64,8 +64,8 @@ class _AddNewsState extends State<AddNews> {
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController dateController = TextEditingController();
-  final TextEditingController timeController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+
   String? _required(String? v, String name) {
     if (v == null || v.trim().isEmpty) return 'يرجى إدخال $name';
     return null;
@@ -104,6 +104,7 @@ class _AddNewsState extends State<AddNews> {
             key: _formKey,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(right: 9),
@@ -187,6 +188,7 @@ class _AddNewsState extends State<AddNews> {
                   keyboardType: TextInputType.text,
                   validator: (v) => _required(v, 'عنوان المنشور'),
                 ),
+
                 const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.only(right: 9),
@@ -197,6 +199,82 @@ class _AddNewsState extends State<AddNews> {
                   ),
                 ),
                 const SizedBox(height: 10),
+                TextFormField(
+                  controller: descriptionController,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 6, // أو null
+                  decoration: InputDecoration(
+                    fillColor: AppColors.white,
+                    hintText: 'أدخل تفاصيل المنشور',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(
+                        color: AppColors.grey2,
+                        width: 1.0,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: AppColors.grey2,
+                        width: 1.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Theme.of(context).primaryColor,
+                        width: 1.5,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+
+                  validator: (v) {
+                    if (v == null || v.trim().isEmpty)
+                      return 'يرجى إدخال تفاصيل المنشور';
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: 45),
+
+                Center(
+                  child: SizedBox(
+                    width: 150,
+                    height: 50,
+
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        FocusScope.of(context).unfocus(); // إغلاق الكيبورد
+                        if (!_formKey.currentState!.validate()) {
+                          // لو في أخطاء، ما بنكمل
+                          return;
+                        }
+
+                        final imagePath = _selectedImage?.path ?? '';
+
+                        Navigator.pop(context);
+                      },
+
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary, // لون الزر
+                        foregroundColor: Colors.white, // لون النص والأيقونات
+
+                        textStyle: const TextStyle(
+                          // شكل النص
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          // شكل الحواف
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        elevation: 5, // الظل
+                      ),
+                      child: Center(child: const Text("إنشاء المنشور")),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
