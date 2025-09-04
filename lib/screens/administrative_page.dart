@@ -196,8 +196,9 @@ class _AdministrativePageState extends State<AdministrativePage> {
               MaterialPageRoute(builder: (context) => CreateAccountPage()),
             );
           },
-          backgroundColor: AppColors.primary,
-          child: Icon(Icons.add, color: Colors.white),
+          tooltip: 'Increment',
+          shape: const CircleBorder(),
+          child: const Icon(Icons.add),
         ),
       ),
     );
