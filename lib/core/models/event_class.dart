@@ -1,4 +1,5 @@
-class Event {
+// this class for delete
+class EventClass {
   final String imageUrl;
   final String date;
   final String time;
@@ -11,7 +12,7 @@ class Event {
   final int hours;
   final String leader;
 
-  Event({
+  EventClass({
     required this.imageUrl,
     required this.date,
     required this.time,

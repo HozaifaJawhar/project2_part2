@@ -1,14 +1,19 @@
-import '../../config/theme/app_theme.dart';
-import '../../core/models/event_class.dart';
-import '../../screens/edit_event_info.dart';
-import '../../screens/event_details_screen.dart';
+import 'package:ammerha_management/core/models/event.dart';
+import 'package:ammerha_management/config/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class OpportunityCard extends StatelessWidget {
   final Event event;
 
   const OpportunityCard({super.key, required this.event});
+
+  String _formatDate(DateTime? dt) {
+    if (dt == null) return '—';
+    // يمكنك تغيير التنسيق كما تحب
+    return DateFormat('yyyy/MM/dd - HH:mm').format(dt.toLocal());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +39,6 @@ class OpportunityCard extends StatelessWidget {
                     size: 40,
                   ),
                   const SizedBox(height: 20),
-
-                  // النص
                   Text(
                     'هل أنت متأكد أنك تريد حذف هذه الفعالية',
                     textAlign: TextAlign.center,
@@ -46,8 +49,6 @@ class OpportunityCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 24),
-
-                  // أزرار (إلغاء + حذف)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -75,7 +76,6 @@ class OpportunityCard extends StatelessWidget {
                           ),
                         ),
                       ),
-
                       // زر حذف
                       ElevatedButton(
                         onPressed: () {
@@ -111,12 +111,13 @@ class OpportunityCard extends StatelessWidget {
       );
     }
 
+    final String dateText = _formatDate(event.date);
     return GestureDetector(
       onTap: () {
-        // Navigator.push(
+        //   Navigator.push(
         //   context,
         //   MaterialPageRoute(
-        //     builder: (context) => EventDetailsScreen(event: event),
+        //     builder: (_) => EventDetailsScreen(eventId: event.id), // ← بالمعرّف فقط
         //   ),
         // );
       },
@@ -127,9 +128,9 @@ class OpportunityCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey, // لون الظل
-              blurRadius: 1, // نعومة الظل
-              offset: const Offset(1, 1), // اتجاهه (0,0) = كل الجهات
+              color: Colors.grey,
+              blurRadius: 1,
+              offset: const Offset(1, 1),
             ),
           ],
         ),
@@ -141,12 +142,7 @@ class OpportunityCard extends StatelessWidget {
               padding: const EdgeInsets.only(top: 12, bottom: 12, right: 12),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(35),
-                child: Image(
-                  image: AssetImage(event.imageUrl),
-                  width: 75,
-                  height: 75,
-                  fit: BoxFit.cover,
-                ),
+                child: _EventCoverImage(url: event.coverImage?.file),
               ),
             ),
             const SizedBox(width: 12),
@@ -156,7 +152,7 @@ class OpportunityCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    event.title,
+                    event.name,
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -164,6 +160,7 @@ class OpportunityCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 6),
+                  // أزرار (تعديل / حذف)
                   Row(
                     children: [
                       const Icon(
@@ -173,7 +170,7 @@ class OpportunityCard extends StatelessWidget {
                       ),
                       SizedBox(width: 3),
                       Text(
-                        event.date,
+                        dateText,
                         style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                       ),
                     ],
@@ -183,12 +180,12 @@ class OpportunityCard extends StatelessWidget {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EditEventInfo(),
-                            ),
-                          );
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (_) => EditEventInfo(eventId: event.id),
+                          //   ),
+                          // );
                         },
                         child: const Icon(
                           size: 22,
@@ -212,15 +209,15 @@ class OpportunityCard extends StatelessWidget {
                 ],
               ),
             ),
-
+            // سهم التفاصيل
             GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EventDetailsScreen(event: event),
-                  ),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => EventDetailsScreen(event: event),
+                //   ),
+                // );
               },
               child: Container(
                 width: 37,
@@ -240,6 +237,38 @@ class OpportunityCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _EventCoverImage extends StatelessWidget {
+  final String? url;
+  const _EventCoverImage({required this.url});
+
+  @override
+  Widget build(BuildContext context) {
+    if (url == null || url!.isEmpty) {
+      // صورة افتراضية من الأصول لو ما في URL
+      return const Image(
+        image: AssetImage('assets/images/event_image.jpg'),
+        width: 75,
+        height: 75,
+        fit: BoxFit.cover,
+      );
+    }
+
+    return Image.network(
+      url!,
+      width: 75,
+      height: 75,
+      fit: BoxFit.cover,
+      errorBuilder: (_, __, ___) => const Image(
+        image: AssetImage('assets/images/event_image.jpg'),
+        width: 75,
+        height: 75,
+        fit: BoxFit.cover,
+      ),
+      // بإمكانك إضافة loadingBuilder إن حبيت
     );
   }
 }
