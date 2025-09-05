@@ -88,7 +88,10 @@ class Api {
     @required String? token,
   }) async {
     Map<String, String> headers = {};
-    headers.addAll({'Content-Type': 'application/json'});
+    headers.addAll({
+      'Accept': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded',
+    });
     if (token != null) {
       headers.addAll({'Authorization': 'Bearer $token'});
     }
@@ -99,6 +102,7 @@ class Api {
       headers: headers,
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
+      if (response.body.isEmpty) return null;
       Map<String, dynamic> data = jsonDecode(response.body);
       return data;
     } else {

@@ -4,13 +4,19 @@ import 'package:ammerha_management/core/helper/api.dart';
 import 'package:ammerha_management/core/provider/%20events%20management/events_provider.dart';
 import 'package:ammerha_management/core/provider/Department_Provider.dart';
 import 'package:ammerha_management/core/provider/auth_provider.dart';
+import 'package:ammerha_management/core/provider/volunteer_requests_provider.dart';
 import 'package:ammerha_management/core/services/events_service.dart';
+import 'package:ammerha_management/core/services/volunteer_service.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'config/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  const storage = FlutterSecureStorage();
+  final api = Api();
+  final token = await storage.read(key: 'auth_token');
   runApp(
     MultiProvider(
       providers: [
@@ -18,6 +24,11 @@ void main() async {
         ChangeNotifierProvider(create: (context) => DepartmentProvider()),
         ChangeNotifierProvider(
           create: (_) => EventsProvider(EventsService(Api())),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => VolunteerRequestsProvider(
+            service: VolunteerService(api: api, token: token),
+          ),
         ),
       ],
       child: MyApp(),
