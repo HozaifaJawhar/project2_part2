@@ -2,6 +2,7 @@ import 'package:ammerha_management/config/constants/url.dart';
 import 'package:ammerha_management/core/helper/build_image_url.dart';
 import 'package:ammerha_management/core/models/event.dart';
 import 'package:ammerha_management/config/theme/app_theme.dart';
+import 'package:ammerha_management/screens/drawer_screens/events_screens/event_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -28,15 +29,16 @@ class OpportunityCard extends StatelessWidget {
       final token = await secure.read(key: 'auth_token');
 
       if (token == null || token.isEmpty) {
-        ScaffoldMessenger.of(
-          outerCtx,
-        ).showSnackBar(const SnackBar(content: Text('فشل الحصول على التوكن')));
+        final preMessenger = ScaffoldMessenger.maybeOf(outerCtx);
+        preMessenger?.showSnackBar(
+          const SnackBar(content: Text('فشل الحصول على التوكن')),
+        );
         return;
       }
 
-      final provider = outerCtx.read<EventsProvider>();
+      final preMessenger = ScaffoldMessenger.maybeOf(outerCtx);
+      final provider = Provider.of<EventsProvider>(outerCtx, listen: false);
       final ok = await provider.deleteEvent(token: token, eventId: event.id);
-
       if (ok) {
         ScaffoldMessenger.of(
           outerCtx,
@@ -110,8 +112,8 @@ class OpportunityCard extends StatelessWidget {
                       // زر حذف
                       ElevatedButton(
                         onPressed: () async {
-                          Navigator.of(dialogCtx).pop(); // أغلق الحوار أولًا
-                          await _handleDelete(); // نفّذ الحذف المتفائل عبر البروفايدر
+                          Navigator.of(dialogCtx).pop();
+                          await _handleDelete();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
@@ -236,12 +238,12 @@ class OpportunityCard extends StatelessWidget {
             // سهم التفاصيل
             GestureDetector(
               onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => EventDetailsScreen(event: event),
-                //   ),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EventDetailsScreen(event: event),
+                  ),
+                );
               },
               child: Container(
                 width: 37,

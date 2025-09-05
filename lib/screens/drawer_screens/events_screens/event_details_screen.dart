@@ -1,10 +1,10 @@
 import 'package:ammerha_management/config/theme/app_theme.dart';
-import 'package:ammerha_management/core/models/event_class.dart';
+import 'package:ammerha_management/core/models/event.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class EventDetailsScreen extends StatefulWidget {
-  final EventClass event;
+  final Event event;
   const EventDetailsScreen({super.key, required this.event});
 
   @override
@@ -12,52 +12,7 @@ class EventDetailsScreen extends StatefulWidget {
 }
 
 class _EventDetailsScreenState extends State<EventDetailsScreen> {
-  bool isRegistered = false;
-  void _showConfirmationDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // اختيار النص حسب الحالة
-        String dialogText = isRegistered
-            ? 'هل أنت متأكد أنك تريد إلغاء المشاركة؟'
-            : 'هل أنت متأكد أنك تريد المشاركة؟';
-
-        return AlertDialog(
-          title: const Text('تأكيد'),
-          content: Text(dialogText),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // إغلاق الحوار
-              },
-              child: const Text('لا'),
-            ),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  isRegistered = !isRegistered;
-                });
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    backgroundColor: AppColors.primary,
-                    content: Text(
-                      isRegistered ? 'تم التسجيل بنجاح!' : 'تم إلغاء التسجيل!',
-                    ),
-                    duration: const Duration(seconds: 2),
-                  ),
-                );
-
-                Navigator.of(context).pop(); // إغلاق مربع الحوار
-              },
-              child: const Text('نعم'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
+  //bool isRegistered = false;
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -74,7 +29,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           backgroundColor: AppColors.primary,
           centerTitle: true,
           title: Text(
-            widget.event.title,
+            widget.event.name,
             style: GoogleFonts.almarai(
               fontWeight: FontWeight.bold,
               color: AppColors.white,
@@ -84,18 +39,18 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         body: ListView(
           children: [
             Image(
-              image: AssetImage(widget.event.imageUrl),
+              image: AssetImage(widget.event.coverImage!.file),
               width: double.infinity,
               fit: BoxFit.cover,
             ),
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Text(
-                widget.event.title,
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
+                widget.event.name,
+                style: GoogleFonts.almarai(
+                  fontWeight: FontWeight.w600,
                   color: AppColors.primary,
+                  fontSize: 25,
                 ),
               ),
             ),
@@ -103,7 +58,11 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
               padding: const EdgeInsets.all(10.0),
               child: Text(
                 widget.event.description,
-                style: TextStyle(color: AppColors.greyText, fontSize: 13),
+                style: GoogleFonts.almarai(
+                  fontWeight: FontWeight.normal,
+                  color: AppColors.secondaryBlack,
+                  fontSize: 20,
+                ),
               ),
             ),
             Divider(
@@ -120,16 +79,31 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                 'زمان الفعالية:',
                 style: GoogleFonts.almarai(
                   fontWeight: FontWeight.bold,
-                  fontSize: 14,
+                  fontSize: 18,
                   color: AppColors.primary,
                 ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-              child: Text(
-                '${widget.event.date}          الساعة:${widget.event.time}',
-                style: TextStyle(color: AppColors.greyText, fontSize: 13),
+              child: Row(
+                children: [
+                  Text(
+                    'التاريخ:  ${widget.event.date!.year}/${widget.event.date!.month}/${widget.event.date!.day}',
+                    style: TextStyle(
+                      color: AppColors.secondaryBlack,
+                      fontSize: 16,
+                    ),
+                  ),
+                  SizedBox(width: 40),
+                  Text(
+                    'الوقت:  ${widget.event.date!.hour}:${widget.event.date!.minute}',
+                    style: TextStyle(
+                      color: AppColors.secondaryBlack,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
               ),
             ),
             Divider(
@@ -145,7 +119,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                 'عدد المتطوعين',
                 style: GoogleFonts.almarai(
                   fontWeight: FontWeight.bold,
-                  fontSize: 14,
+                  fontSize: 18,
                   color: AppColors.primary,
                 ),
               ),
@@ -157,28 +131,28 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                   Text(
                     'المطلوب:  ',
                     style: GoogleFonts.almarai(
-                      fontSize: 12,
-                      color: AppColors.primary,
+                      fontSize: 16,
+                      color: AppColors.secondaryBlack,
                     ),
                   ),
                   Text(
-                    '${widget.event.totalVolunteers}',
+                    '${widget.event.volunteersCount}',
                     style: GoogleFonts.almarai(
-                      fontSize: 12,
+                      fontSize: 16,
                       color: Colors.green,
                     ),
                   ),
                   SizedBox(width: 20),
                   Text(
-                    'المتبقي:  ',
+                    'عدد المقبولين:  ',
                     style: GoogleFonts.almarai(
-                      fontSize: 12,
-                      color: AppColors.primary,
+                      fontSize: 16,
+                      color: AppColors.secondaryBlack,
                     ),
                   ),
                   Text(
-                    '${widget.event.joinedVolunteers}',
-                    style: GoogleFonts.almarai(fontSize: 12, color: Colors.red),
+                    '${widget.event.acceptedCount}',
+                    style: GoogleFonts.almarai(fontSize: 16, color: Colors.red),
                   ),
                 ],
               ),
@@ -196,7 +170,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                 'مكان الفعالية:',
                 style: GoogleFonts.almarai(
                   fontWeight: FontWeight.bold,
-                  fontSize: 14,
+                  fontSize: 18,
                   color: AppColors.primary,
                 ),
               ),
@@ -204,8 +178,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             Padding(
               padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
               child: Text(
-                widget.event.place,
-                style: TextStyle(color: AppColors.greyText, fontSize: 13),
+                widget.event.location!,
+                style: TextStyle(color: AppColors.secondaryBlack, fontSize: 16),
               ),
             ),
             Divider(
@@ -217,20 +191,38 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             ),
             Padding(
               padding: const EdgeInsets.all(10.0),
+
               child: Text(
                 'عدد الساعات التطوعية:',
                 style: GoogleFonts.almarai(
                   fontWeight: FontWeight.bold,
-                  fontSize: 14,
+                  fontSize: 18,
                   color: AppColors.primary,
                 ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-              child: Text(
-                '${widget.event.hours}',
-                style: TextStyle(color: AppColors.greyText, fontSize: 13),
+              child: Row(
+                children: [
+                  Text(
+                    'عدد الساعات الأعلى: ${widget.event.maxHours}',
+                    style: GoogleFonts.almarai(
+                      fontWeight: FontWeight.normal,
+                      fontSize: 16,
+                      color: AppColors.secondaryBlack,
+                    ),
+                  ),
+                  SizedBox(width: 40),
+                  Text(
+                    'عدد الساعات الأدنى: ${widget.event.minHours}',
+                    style: GoogleFonts.almarai(
+                      fontWeight: FontWeight.normal,
+                      fontSize: 16,
+                      color: AppColors.secondaryBlack,
+                    ),
+                  ),
+                ],
               ),
             ),
             Divider(
@@ -240,37 +232,15 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
               indent: 15,
               endIndent: 15,
             ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Center(
-                child: Text(
-                  'المشرف على الفعالية:${widget.event.leader}',
-                  style: GoogleFonts.almarai(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                    color: AppColors.primary,
-                  ),
-                ),
-              ),
-            ),
-
             // Padding(
             //   padding: const EdgeInsets.all(10.0),
-            //   child: GestureDetector(
-            //     onTap: () {
-            //       _showConfirmationDialog(context);
-            //     },
-            //     child: Container(
-            //       height: 35,
-            //       decoration: BoxDecoration(
+            //   child: Center(
+            //     child: Text(
+            //       'المشرف على الفعالية:${widget.event.leader}',
+            //       style: GoogleFonts.almarai(
+            //         fontWeight: FontWeight.bold,
+            //         fontSize: 15,
             //         color: AppColors.primary,
-            //         borderRadius: BorderRadius.circular(9),
-            //       ),
-            //       child: Center(
-            //         child: Text(
-            //           isRegistered ? 'إلغاء التسجيل' : 'تسجيل',
-            //           style: const TextStyle(color: AppColors.white),
-            //         ),
             //       ),
             //     ),
             //   ),
