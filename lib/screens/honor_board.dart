@@ -73,43 +73,75 @@ class _HonorBoardScreenState extends State<HonorBoardScreen> {
       drawer: CustomDrawer(),
       body: Directionality(
         textDirection: TextDirection.rtl,
-        child: RefreshIndicator(
-          onRefresh: () => provider.refresh(),
-          child: provider.isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : provider.error != null
-              ? ListView(
-                  children: [
-                    const SizedBox(height: 40),
-                    Icon(Icons.error, color: Colors.red.shade400, size: 48),
-                    const SizedBox(height: 12),
-                    Center(child: Text(provider.error!)),
-                    const SizedBox(height: 16),
-                    Center(
-                      child: ElevatedButton(
-                        onPressed: () => provider.load(),
-                        child: const Text('إعادة المحاولة'),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            children: [
+              // Same filter bar above the content
+              FilterBarWidget(
+                currentFilters: _currentFilters,
+                onTap: _openFilterScreen,
+              ),
+              const SizedBox(height: 12),
+
+              Expanded(
+                child: Builder(
+                  builder: (_) {
+                    // initial loading
+                    if (provider.isLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    // error
+                    if (provider.error != null) {
+                      return Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'حدث خطأ أثناء الجلب:\n${provider.error}',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.almarai(
+                                color: Colors.red,
+                                fontSize: 14,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            ElevatedButton(
+                              onPressed: provider.load,
+                              child: const Text('إعادة المحاولة'),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
+                    // when there is no data
+                    final hasTop3 = topThree.length == 3;
+                    final hasOthers = others.isNotEmpty;
+                    if (!hasTop3 && !hasOthers) {
+                      return const Center(child: Text('لا توجد بيانات حالياً'));
+                    }
+
+                    // Existing data: We display it inside a RefreshIndicator that wraps the ListView.
+                    return RefreshIndicator(
+                      onRefresh: provider.refresh,
+                      child: ListView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        children: [
+                          const SizedBox(height: 6),
+                          if (hasTop3) TopThreePodiumWidget(topThree: topThree),
+                          if (hasTop3) const SizedBox(height: 20),
+                          if (hasOthers) RankListWidget(volunteers: others),
+                          const SizedBox(height: 20),
+                        ],
                       ),
-                    ),
-                  ],
-                )
-              : SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  child: Column(
-                    children: [
-                      FilterBarWidget(
-                        currentFilters: _currentFilters,
-                        onTap: _openFilterScreen,
-                      ),
-                      const SizedBox(height: 10),
-                      if (topThree.length == 3)
-                        TopThreePodiumWidget(topThree: topThree),
-                      const SizedBox(height: 20),
-                      RankListWidget(volunteers: others),
-                      const SizedBox(height: 20),
-                    ],
-                  ),
+                    );
+                  },
                 ),
+              ),
+            ],
+          ),
         ),
       ),
     );
