@@ -26,7 +26,7 @@ class _HonorBoardScreenState extends State<HonorBoardScreen> {
   @override
   void initState() {
     super.initState();
-    // تحميل أولي
+    // initial laod
     Future.microtask(() => context.read<HonorBoardProvider>().load());
   }
 
@@ -39,7 +39,7 @@ class _HonorBoardScreenState extends State<HonorBoardScreen> {
     );
     if (result != null) {
       setState(() => _currentFilters = result);
-      // إن رغبت بتطبيق الفلاتر على السيرفر لاحقاً، مرّرها في الخدمة ثم reload
+      // If you want to apply the filters to the server later, pass them through the service and then reload.
       context.read<HonorBoardProvider>().refresh();
     }
   }

@@ -11,7 +11,7 @@ class TopThreePodiumWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ترتيب العرض: الثاني يسار، الأول وسط، الثالث يمين
+    // Display order: 2nd left, 1st middle, 3rd right
     final ordered = [topThree[1], topThree[0], topThree[2]];
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20.0),
@@ -111,7 +111,7 @@ class TopThreePodiumWidget extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // الترتيب
+              // the rank number
               Text(
                 item.position.toString(),
                 style: GoogleFonts.almarai(
@@ -121,7 +121,7 @@ class TopThreePodiumWidget extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
-              // النقاط
+              // points
               Text(
                 '$pts',
                 style: GoogleFonts.almarai(
