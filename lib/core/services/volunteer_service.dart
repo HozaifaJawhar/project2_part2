@@ -50,4 +50,24 @@ class VolunteerService {
     final url = '${AppString.baseUrl}/dashboard/users/delete/$id';
     await api.delete(url: url, token: token);
   }
+
+  // HonoBoard
+  Future<List<NewVolunteer>> fetchHonorBoard() async {
+    final url = '${AppString.baseUrl}/user/users/honor-board';
+    final resp = await api.get(url: url, token: token);
+
+    final List dataList = (resp is List)
+        ? resp
+        : (resp?['data'] is List ? resp['data'] : const []);
+
+    final list = dataList
+        .map<NewVolunteer>(
+          (e) => NewVolunteer.fromJson(e as Map<String, dynamic>),
+        )
+        .toList();
+
+    // We make sure that the order is in descending order according to points, if the server does not return it in order
+    list.sort((a, b) => (b.points ?? 0).compareTo(a.points ?? 0));
+    return list;
+  }
 }

@@ -12,7 +12,13 @@ import 'package:url_launcher/url_launcher.dart';
 
 class VolunteerProfileScreen2 extends StatelessWidget {
   final NewVolunteer vol;
-  const VolunteerProfileScreen2({super.key, required this.vol});
+  final bool showEndButton;
+
+  const VolunteerProfileScreen2({
+    super.key,
+    required this.vol,
+    this.showEndButton = false,
+  });
 
   // ------- helpers -------
   String _formatDate(String? iso) {
@@ -277,55 +283,57 @@ class VolunteerProfileScreen2 extends StatelessWidget {
             const SizedBox(height: 32),
 
             // End volunteering
-            ElevatedButton(
-              onPressed: () async {
-                final confirmed = await showConfirmDialog(
-                  context,
-                  title: 'تأكيد الإنهاء',
-                  message: 'هل أنت متأكد أنك تريد إنهاء التطوع لهذا المتطوع؟',
-                  confirmText: 'إنهاء',
-                  cancelText: 'إلغاء',
-                  confirmColor: AppColors.primary,
-                );
-                if (confirmed != true) return;
-                try {
-                  await prov.endVolunteer(vol.id); // delete call
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'تم إنهاء التطوع',
-                          textDirection: TextDirection.rtl,
-                          style: GoogleFonts.almarai(color: Colors.white),
+            if (showEndButton) ...[
+              ElevatedButton(
+                onPressed: () async {
+                  final confirmed = await showConfirmDialog(
+                    context,
+                    title: 'تأكيد الإنهاء',
+                    message: 'هل أنت متأكد أنك تريد إنهاء التطوع لهذا المتطوع؟',
+                    confirmText: 'إنهاء',
+                    cancelText: 'إلغاء',
+                    confirmColor: AppColors.primary,
+                  );
+                  if (confirmed != true) return;
+                  try {
+                    await prov.endVolunteer(vol.id); // delete call
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'تم إنهاء التطوع',
+                            textDirection: TextDirection.rtl,
+                            style: GoogleFonts.almarai(color: Colors.white),
+                          ),
+                          backgroundColor: Colors.red,
                         ),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                    Navigator.of(context).maybePop();
+                      );
+                      Navigator.of(context).maybePop();
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('فشل العملية: $e'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
                   }
-                } catch (e) {
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('فشل العملية: $e'),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  }
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text(
+                  "إنهاء التطوع",
+                  style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
-              child: const Text(
-                "إنهاء التطوع",
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
-            ),
+            ],
           ],
         ),
       ),

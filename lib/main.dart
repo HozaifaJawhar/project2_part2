@@ -4,6 +4,7 @@ import 'package:ammerha_management/core/helper/api.dart';
 import 'package:ammerha_management/core/provider/%20events%20management/events_provider.dart';
 import 'package:ammerha_management/core/provider/Department_Provider.dart';
 import 'package:ammerha_management/core/provider/auth_provider.dart';
+import 'package:ammerha_management/core/provider/honor_board_provider.dart';
 import 'package:ammerha_management/core/provider/volunteer_requests_provider.dart';
 import 'package:ammerha_management/core/provider/volunteers_provider.dart';
 import 'package:ammerha_management/core/services/events_service.dart';
@@ -15,6 +16,7 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // i put storage and api and token here to load it once when run the app, then i will send it for each provider in multi provider list
   const storage = FlutterSecureStorage();
   final api = Api();
   final token = await storage.read(key: 'auth_token');
@@ -34,6 +36,11 @@ void main() async {
         ChangeNotifierProvider(
           create: (_) => VolunteersProvider(
             service: VolunteerService(api: api, token: token),
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => HonorBoardProvider(
+            service: VolunteerService(api: Api(), token: token),
           ),
         ),
       ],

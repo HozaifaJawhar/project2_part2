@@ -1,100 +1,89 @@
 import 'package:ammerha_management/config/theme/app_theme.dart';
-import 'package:ammerha_management/core/models/volunteer.dart';
-import 'package:ammerha_management/widgets/honorBaord/rank_helper.dart';
+import 'package:ammerha_management/core/helper/utils.dart';
+import 'package:ammerha_management/core/provider/honor_board_provider.dart';
+import 'package:ammerha_management/screens/volunteer_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class TopThreePodiumWidget extends StatelessWidget {
-  final List<Volunteer> topThree;
-
+  final List<HonorItem> topThree;
   const TopThreePodiumWidget({super.key, required this.topThree});
 
   @override
   Widget build(BuildContext context) {
-    final orderedTopThree = [topThree[1], topThree[0], topThree[2]];
-
+    // ترتيب العرض: الثاني يسار، الأول وسط، الثالث يمين
+    final ordered = [topThree[1], topThree[0], topThree[2]];
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _buildPodiumItem(
-            context,
-            orderedTopThree[0],
-            150,
-            AppColors.secondary,
-          ),
+          _buildPodiumItem(context, ordered[0], 150, AppColors.secondary),
           const SizedBox(width: 8),
-          _buildPodiumItem(context, orderedTopThree[1], 180, AppColors.primary),
+          _buildPodiumItem(context, ordered[1], 180, AppColors.primary),
           const SizedBox(width: 8),
-          _buildPodiumItem(
-            context,
-            orderedTopThree[2],
-            150,
-            AppColors.secondary,
-          ),
+          _buildPodiumItem(context, ordered[2], 120, AppColors.secondary),
         ],
       ),
     );
   }
 
-  // Widget _getRankBadge(RankTier tier, {double size = 24}) {
-  //   String imagePath;
-  //   switch (tier) {
-  //     case RankTier.diamond:
-  //       imagePath = 'assets/icons/medal3.png';
-  //       break;
-  //     case RankTier.gold:
-  //       imagePath = 'assets/icons/medal3.png';
-  //       break;
-  //     case RankTier.silver:
-  //       imagePath = 'assets/icons/medal3.png';
-  //       break;
-  //     case RankTier.bronze:
-  //       imagePath = 'assets/icons/medal3.png';
-  //       break;
-  //   }
-  //   return Image.asset(imagePath, width: size, height: size);
-  // }
-
   Widget _buildPodiumItem(
     BuildContext context,
-    Volunteer volunteer,
+    HonorItem item,
     double height,
     Color color,
   ) {
+    final u = item.user;
+    final pts = u.points ?? 0;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Stack(
-          clipBehavior: Clip.none,
-          children: [
-            CircleAvatar(
-              radius: 35,
-              backgroundColor: Colors.grey.shade300,
-              backgroundImage: volunteer.imageUrl.isNotEmpty
-                  ? NetworkImage(volunteer.imageUrl)
-                  : const AssetImage('assets/images/profile.png')
-                        as ImageProvider,
-            ),
-            Positioned(
-              right: -4,
-              bottom: -4,
-              child: Container(
-                padding: const EdgeInsets.all(4),
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.white,
-                ),
-                child: getRankBadgeWidget(volunteer.tier, size: 18),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) =>
+                    VolunteerProfileScreen2(vol: u, showEndButton: false),
               ),
-            ),
-          ],
+            );
+          },
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              CircleAvatar(
+                radius: 38,
+                backgroundColor: Colors.grey.shade300,
+                backgroundImage: (u.imageUrl != null && u.imageUrl!.isNotEmpty)
+                    ? NetworkImage(u.imageUrl!)
+                    : const AssetImage('assets/images/profile.png')
+                          as ImageProvider,
+              ),
+              Positioned(
+                right: -4,
+                bottom: -4,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.white,
+                  ),
+                  child: Image.asset(
+                    RankUtils.medalAsset(u.rank),
+                    width: 24,
+                    height: 24,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
         const SizedBox(height: 8),
         Text(
-          volunteer.name,
+          u.name,
           style: GoogleFonts.almarai(
             fontSize: 14,
             fontWeight: FontWeight.bold,
@@ -122,8 +111,9 @@ class TopThreePodiumWidget extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // الترتيب
               Text(
-                volunteer.rank.toString(),
+                item.position.toString(),
                 style: GoogleFonts.almarai(
                   fontSize: 36,
                   fontWeight: FontWeight.bold,
@@ -131,19 +121,20 @@ class TopThreePodiumWidget extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
+              // النقاط
               Text(
-                '${volunteer.opportunities}',
+                '$pts',
                 style: GoogleFonts.almarai(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.white.withOpacity(0.9),
+                  color: AppColors.white.withOpacity(0.95),
                 ),
               ),
               Text(
-                'فرصة تطوعية',
+                'نقطة',
                 style: GoogleFonts.almarai(
                   fontSize: 12,
-                  color: AppColors.white.withOpacity(0.8),
+                  color: AppColors.white.withOpacity(0.85),
                 ),
               ),
             ],
