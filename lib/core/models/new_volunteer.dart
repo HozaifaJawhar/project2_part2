@@ -14,6 +14,8 @@ class NewVolunteer {
   final String? departmentName;
   final String? departmentId;
   final String? imageUrl;
+  final String? rank;
+  final double? progress;
 
   NewVolunteer({
     required this.id,
@@ -31,10 +33,22 @@ class NewVolunteer {
     this.departmentName,
     this.departmentId,
     this.imageUrl,
+    this.rank,
+    this.progress,
   });
 
   factory NewVolunteer.fromJson(Map<String, dynamic> json) {
     final dept = json['department'];
+
+    double? _parseProgress(dynamic v) {
+      if (v == null) return null;
+      final s = v.toString().trim(); // "0.4%" | "40%" | "0.4"
+      final noPct = s.replaceAll('%', ''); // "0.4" | "40"
+      final d = double.tryParse(noPct);
+      if (d == null) return null;
+      return s.contains('%') || d > 1 ? d / 100.0 : d;
+    }
+
     return NewVolunteer(
       id: (json['id'] ?? 0) is int
           ? json['id']
@@ -65,6 +79,8 @@ class NewVolunteer {
               json['personalImage'].toString().isEmpty)
           ? null
           : json['personalImage'].toString(),
+      rank: (json['rank'] ?? '').toString(),
+      progress: _parseProgress(json['progress']),
     );
   }
 }

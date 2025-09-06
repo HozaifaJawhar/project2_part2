@@ -5,6 +5,7 @@ import 'package:ammerha_management/core/provider/%20events%20management/events_p
 import 'package:ammerha_management/core/provider/Department_Provider.dart';
 import 'package:ammerha_management/core/provider/auth_provider.dart';
 import 'package:ammerha_management/core/provider/volunteer_requests_provider.dart';
+import 'package:ammerha_management/core/provider/volunteers_provider.dart';
 import 'package:ammerha_management/core/services/events_service.dart';
 import 'package:ammerha_management/core/services/volunteer_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -27,6 +28,11 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (_) => VolunteerRequestsProvider(
+            service: VolunteerService(api: api, token: token),
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => VolunteersProvider(
             service: VolunteerService(api: api, token: token),
           ),
         ),

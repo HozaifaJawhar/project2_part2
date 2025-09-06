@@ -11,6 +11,7 @@ class AppColors {
   static const Color grey2 = Color.fromARGB(255, 221, 214, 214);
   static const Color darkBlue = Color(0xFF0A2A6E);
   static const Color secondaryBlack = Color(0xF0484747);
+  static Color navyBlueWithOpacity10 = Color(0xFF13296A).withOpacity(0.1);
 }
 
 class AppTheme {
@@ -28,7 +29,9 @@ class AppTheme {
       error: Colors.red,
       onError: AppColors.white,
       surface: AppColors.grey2,
-      onSurface: AppColors.black, background: Colors.transparent,onBackground: Colors.transparent
+      onSurface: AppColors.black,
+      background: Colors.transparent,
+      onBackground: Colors.transparent,
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,

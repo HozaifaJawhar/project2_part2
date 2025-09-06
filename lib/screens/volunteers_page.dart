@@ -1,129 +1,58 @@
+import 'package:ammerha_management/config/theme/app_theme.dart';
+import 'package:ammerha_management/core/helper/utils.dart';
+import 'package:ammerha_management/core/models/new_volunteer.dart';
+import 'package:ammerha_management/core/provider/volunteers_provider.dart';
+import 'package:ammerha_management/screens/request_profile.dart';
+import 'package:ammerha_management/screens/volunteer_profile.dart';
 import 'package:ammerha_management/widgets/basics/drawer.dart';
 import 'package:ammerha_management/widgets/basics/search_textfield.dart';
 import 'package:flutter/material.dart';
-import '../config/theme/app_theme.dart';
-import '../widgets/volunteers.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class VolunteersPage extends StatefulWidget {
+  const VolunteersPage({super.key});
+
   @override
-  _VolunteersPageState createState() => _VolunteersPageState();
+  State<VolunteersPage> createState() => _VolunteersPage();
 }
 
-class _VolunteersPageState extends State<VolunteersPage> {
-  final TextEditingController _searchController = TextEditingController();
-  String _selectedFilter = 'الكل';
-  List<String> _filters = [
-    'الكل',
-    'صحة نفسية',
-    'طفل',
-    'كبار السن',
-    'تعليم',
-    'طبي',
-  ];
-
-  List<Volunteer> _volunteers = [
-    Volunteer(
-      id: '1',
-      name: 'حديقة إبراهيم جوهر',
-      department: 'صحة نفسية',
-      opportunities: 25,
-      hasGoldBadge: true,
-    ),
-    Volunteer(
-      id: '2',
-      name: 'سارة محمد أحمد',
-      department: 'طفل',
-      opportunities: 18,
-      hasGoldBadge: true,
-    ),
-    Volunteer(
-      id: '3',
-      name: 'محمد عبد الله سعيد',
-      department: 'كبار السن',
-      opportunities: 32,
-      hasGoldBadge: true,
-    ),
-    Volunteer(
-      id: '4',
-      name: 'فاطمة علي حسن',
-      department: 'تعليم',
-      opportunities: 25,
-      hasGoldBadge: false,
-    ),
-    Volunteer(
-      id: '5',
-      name: 'أحمد خالد محمود',
-      department: 'طبي',
-      opportunities: 28,
-      hasGoldBadge: true,
-    ),
-    Volunteer(
-      id: '6',
-      name: 'نور الهدى يوسف',
-      department: 'صحة نفسية',
-      opportunities: 22,
-      hasGoldBadge: true,
-    ),
-  ];
-
-  List<Volunteer> get _filteredVolunteers {
-    List<Volunteer> filtered = _volunteers;
-
-    if (_selectedFilter != 'الكل') {
-      filtered = filtered
-          .where((v) => v.department == _selectedFilter)
-          .toList();
-    }
-
-    if (_searchController.text.isNotEmpty) {
-      filtered = filtered
-          .where(
-            (v) =>
-                v.name.contains(_searchController.text) ||
-                v.department.contains(_searchController.text),
-          )
-          .toList();
-    }
-
-    return filtered;
+class _VolunteersPage extends State<VolunteersPage> {
+  @override
+  void initState() {
+    super.initState();
+    // Initial load
+    Future.microtask(() => context.read<VolunteersProvider>().load());
   }
 
   @override
   Widget build(BuildContext context) {
+    final prov = context.watch<VolunteersProvider>();
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        backgroundColor: Colors.grey[100],
         appBar: AppBar(
-          title: const Center(
-            child: Text(
-              'إدارة المتطوعين',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+          backgroundColor: AppColors.primary,
+          centerTitle: true,
+          title: Text(
+            'طلبات التطوع',
+            style: GoogleFonts.almarai(
+              fontWeight: FontWeight.w800,
+              fontSize: 20,
+              color: Colors.white,
             ),
           ),
-          backgroundColor: AppColors.primary,
-          elevation: 0,
           iconTheme: const IconThemeData(color: Colors.white),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.notifications_outlined, color: Colors.white),
-              onPressed: () {},
-            ),
-          ],
         ),
         drawer: CustomDrawer(),
         body: Directionality(
           textDirection: TextDirection.rtl,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              children: [
+                Row(
                   children: [
                     Container(
                       decoration: BoxDecoration(
@@ -144,148 +73,129 @@ class _VolunteersPageState extends State<VolunteersPage> {
                           Icons.filter_alt_sharp,
                           color: AppColors.primary,
                         ),
-                        onPressed: _showFilterDialog,
+                        onPressed: () {},
                       ),
                     ),
                     SizedBox(width: 12),
                     Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(30),
-                          // More circular border
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 4,
-                              offset: Offset(0, 2),
-                              spreadRadius: 1,
-                            ),
-                          ],
-                        ),
-                        child: SearchTextfield(hintText: 'البحث عن متطوع'),
+                      child: SearchTextfield(
+                        hintText: 'البحث عن متطوع',
+                        onChanged: prov.setSearch,
                       ),
                     ),
                   ],
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 16),
-                child: Text(
-                  'المتطوعين',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.primary,
+                const SizedBox(height: 12),
+
+                Expanded(
+                  child: Builder(
+                    builder: (_) {
+                      if (prov.isLoading) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+
+                      if (prov.error != null) {
+                        return Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'حدث خطأ أثناء الجلب:\n${prov.error}',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.almarai(
+                                  color: Colors.red,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              ElevatedButton(
+                                onPressed: prov.load,
+                                child: const Text('إعادة المحاولة'),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+
+                      final items = prov.items;
+                      if (items.isEmpty) {
+                        return const Center(
+                          child: Text('لا توجد طلبات حالياً'),
+                        );
+                      }
+
+                      return RefreshIndicator(
+                        onRefresh: prov.refresh,
+                        child: ListView.builder(
+                          itemCount: items.length,
+                          itemBuilder: (context, index) {
+                            final vol = items[index];
+                            return _volunteerTile(volunteer: vol);
+                          },
+                        ),
+                      );
+                    },
                   ),
-                  textAlign: TextAlign.right,
                 ),
-              ),
-              SizedBox(height: 8),
-              Expanded(
-                child: ListView.builder(
-                  padding: EdgeInsets.all(16),
-                  itemCount: _filteredVolunteers.length,
-                  itemBuilder: (context, index) {
-                    final volunteer = _filteredVolunteers[index];
-                    return _buildVolunteerCard(volunteer);
-                  },
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
   }
+}
 
-  Widget _buildVolunteerCard(Volunteer volunteer) {
+class _volunteerTile extends StatelessWidget {
+  final NewVolunteer volunteer;
+  const _volunteerTile({required this.volunteer});
+
+  Widget _pointsPill(BuildContext context) {
+    final points = volunteer.points ?? 0;
+    final rank = volunteer.rank;
+
     return Container(
-      margin: EdgeInsets.only(bottom: 12),
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsetsDirectional.only(
+        start: 10,
+        end: 12,
+        top: 6,
+        bottom: 6,
+      ),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 4,
-            offset: Offset(0, 2),
-          ),
-        ],
+        color: AppColors.navyBlueWithOpacity10,
+        borderRadius: BorderRadius.circular(24),
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.grey[300],
-              // TODO: Replace this with NetworkImage or AssetImage
-              // Example: DecorationImage(image: NetworkImage(volunteer.photoUrl), fit: BoxFit.cover)
-            ),
-            child: const Image(
-              image: AssetImage("assets/images/profile.png"),
+          // Image of the medal
+          ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Image.asset(
+              RankUtils.medalAsset(rank),
+              width: 28,
+              height: 28,
               fit: BoxFit.cover,
             ),
           ),
-          SizedBox(width: 12),
-          Expanded(
-            flex: 2,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          const SizedBox(width: 8),
+
+          // number of points + the word "point"
+          RichText(
+            text: TextSpan(
               children: [
-                Text(
-                  volunteer.name,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                  textAlign: TextAlign.right,
-                ),
-                Text(
-                  volunteer.department,
-                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                  textAlign: TextAlign.right,
-                ),
-              ],
-            ),
-          ),
-          Spacer(),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Row(
-              children: [
-                if (volunteer.hasGoldBadge) ...[
-                  Container(
-                    width: 24,
-                    height: 24,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.amber,
-                      // TODO: Replace this with actual gold badge image
-                      // Example: DecorationImage(image: AssetImage('assets/gold_badge.png'), fit: BoxFit.cover)
-                    ),
-                    child: const Image(
-                      image: AssetImage("assets/icons/medal3.png"),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                ],
-                Text(
-                  '${volunteer.opportunities} فرصة',
-                  style: TextStyle(
+                TextSpan(
+                  text: '$points ',
+                  style: GoogleFonts.almarai(
                     color: AppColors.primary,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                TextSpan(
+                  text: 'نقطة',
+                  style: GoogleFonts.almarai(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ],
@@ -296,28 +206,73 @@ class _VolunteersPageState extends State<VolunteersPage> {
     );
   }
 
-  void _showFilterDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('تصفية حسب القسم'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: _filters
-              .map(
-                (filter) => RadioListTile<String>(
-                  title: Text(filter),
-                  value: filter,
-                  groupValue: _selectedFilter,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedFilter = value!;
-                    });
-                    Navigator.pop(context);
-                  },
+  Widget _avatar(String? imageUrl) {
+    if (imageUrl == null ||
+        imageUrl.isEmpty ||
+        imageUrl.startsWith('assets/')) {
+      return const CircleAvatar(
+        radius: 35,
+        backgroundImage: AssetImage('assets/images/profile.png'),
+      );
+    }
+    return CircleAvatar(
+      radius: 26,
+      backgroundColor: Colors.grey.shade200,
+      backgroundImage: NetworkImage(imageUrl),
+      onBackgroundImageError: (_, __) {},
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VolunteerProfileScreen2(vol: volunteer),
+          ),
+        );
+      },
+      child: Container(
+        height: 86,
+        margin: const EdgeInsets.symmetric(vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 8,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Row(
+          textDirection: TextDirection.rtl,
+          children: [
+            // Selfie
+            _avatar(volunteer.imageUrl),
+            const SizedBox(width: 12),
+
+            //Name in the middle
+            Expanded(
+              child: Text(
+                volunteer.name,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                style: GoogleFonts.almarai(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
                 ),
-              )
-              .toList(),
+              ),
+            ),
+
+            //Points + Badge
+            _pointsPill(context),
+          ],
         ),
       ),
     );

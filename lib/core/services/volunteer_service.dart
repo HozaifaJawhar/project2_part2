@@ -19,6 +19,17 @@ class VolunteerService {
     return dataList.map<NewVolunteer>((e) => NewVolunteer.fromJson(e)).toList();
   }
 
+  Future<List<NewVolunteer>> fetchActiveVolunteers({int active = 1}) async {
+    final url = '${AppString.baseUrl}/dashboard/users/all?active=$active';
+    final resp = await api.get(url: url, token: token);
+
+    final List dataList = (resp is List)
+        ? resp
+        : (resp?['data'] is List ? resp['data'] : const []);
+
+    return dataList.map<NewVolunteer>((e) => NewVolunteer.fromJson(e)).toList();
+  }
+
   // activate user
   Future<void> updateUser({
     required int id,
@@ -32,5 +43,11 @@ class VolunteerService {
     };
 
     await api.put(url: url, body: body, token: token);
+  }
+
+  // delete volunteer
+  Future<void> deleteUser({required int id}) async {
+    final url = '${AppString.baseUrl}/dashboard/users/delete/$id';
+    await api.delete(url: url, token: token);
   }
 }
