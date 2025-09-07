@@ -9,10 +9,11 @@ import 'package:intl/intl.dart';
 
 class EventsService {
   final Api _api;
-  EventsService(this._api);
+  final String custumUrl;
+  EventsService(this._api, this.custumUrl);
 
   Future<List<Event>> getEvents({String? token}) async {
-    final url = '${AppString.baseUrl}/dashboard/events/all';
+    final url = '${AppString.baseUrl}$custumUrl';
     final res = await _api.get(url: url, token: token);
 
     if (res is Map<String, dynamic> && res['data'] is List) {

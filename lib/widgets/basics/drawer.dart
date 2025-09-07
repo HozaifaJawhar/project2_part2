@@ -2,6 +2,7 @@ import 'package:ammerha_management/config/routes/app_routes.dart';
 import 'package:ammerha_management/core/provider/auth_provider.dart';
 import 'package:ammerha_management/screens/drawer_screens/departments_screens/departments.dart';
 import 'package:ammerha_management/screens/drawer_screens/news_screens/news.dart';
+import 'package:ammerha_management/screens/ended_event.dart';
 import 'package:ammerha_management/screens/home_page.dart';
 import 'package:ammerha_management/screens/honor_board.dart';
 import 'package:ammerha_management/screens/volunteer_requests.dart';
@@ -47,6 +48,16 @@ class CustomDrawer extends StatelessWidget {
                           builder: (context) => const HomePage(),
                         ),
                         (route) => false, // بيمسح كل شي قبلها
+                      );
+                    },
+                  ),
+                  _buildDrawerItem(
+                    icon: Icons.event_available_outlined,
+                    text: 'تقييم الفعاليات المنتهية ',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => EndedEvent()),
                       );
                     },
                   ),

@@ -2,7 +2,7 @@ import 'package:ammerha_management/config/constants/url.dart';
 import 'package:ammerha_management/core/helper/build_image_url.dart';
 import 'package:ammerha_management/core/models/event.dart';
 import 'package:ammerha_management/config/theme/app_theme.dart';
-import 'package:ammerha_management/screens/drawer_screens/events_screens/event_details_screen.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -10,11 +10,11 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:ammerha_management/core/provider/%20events%20management/events_provider.dart';
 
-class OpportunityCard extends StatelessWidget {
+class EndedEventCard extends StatelessWidget {
   final Event event;
 
   final VoidCallback? onTap; // باراميتر جديد
-  const OpportunityCard({super.key, required this.event, this.onTap});
+  const EndedEventCard({super.key, required this.event, this.onTap});
 
   String _formatDate(DateTime? dt) {
     if (dt == null) return '—';
