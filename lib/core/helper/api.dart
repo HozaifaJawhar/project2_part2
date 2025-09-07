@@ -82,6 +82,40 @@ class Api {
     }
   }
 
+  // ✅ New: Generic multipart accepts fields + more than one file (we use it to create the news with cover_image[file])
+  Future<dynamic> postMultipart({
+    required String url,
+    Map<String, String>? fields,
+    // files: key = field name in API, value = active local path
+    Map<String, String>? files,
+    @required String? token,
+  }) async {
+    final req = http.MultipartRequest('POST', Uri.parse(url));
+    req.headers.addAll({'Accept': 'application/json'});
+    if (token != null) {
+      req.headers['Authorization'] = 'Bearer $token';
+    }
+    if (fields != null && fields.isNotEmpty) {
+      req.fields.addAll(fields);
+    }
+    if (files != null && files.isNotEmpty) {
+      for (final entry in files.entries) {
+        req.files.add(
+          await http.MultipartFile.fromPath(entry.key, entry.value),
+        );
+      }
+    }
+    final streamed = await req.send();
+    final resp = await http.Response.fromStream(streamed);
+    if (resp.statusCode == 200 || resp.statusCode == 201) {
+      return resp.body.isNotEmpty ? jsonDecode(resp.body) : null;
+    } else {
+      throw Exception(
+        'POST multipart failed [${resp.statusCode}]: ${resp.body}',
+      );
+    }
+  }
+
   Future<dynamic> put({
     required String url,
     @required dynamic body,

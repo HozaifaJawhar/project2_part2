@@ -91,7 +91,6 @@ class _HonorBoardScreenState extends State<HonorBoardScreen> {
                     if (provider.isLoading) {
                       return const Center(child: CircularProgressIndicator());
                     }
-
                     // error
                     if (provider.error != null) {
                       return Center(
@@ -115,7 +114,6 @@ class _HonorBoardScreenState extends State<HonorBoardScreen> {
                         ),
                       );
                     }
-
                     // when there is no data
                     final hasTop3 = topThree.length == 3;
                     final hasOthers = others.isNotEmpty;

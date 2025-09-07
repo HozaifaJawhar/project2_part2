@@ -1,9 +1,14 @@
+import 'package:ammerha_management/config/theme/app_theme.dart';
 import 'package:ammerha_management/core/models/news_item.dart';
+import 'package:ammerha_management/shared/dialogs/confirm_dialog.dart';
+import 'package:ammerha_management/widgets/basics/safe_image.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:ammerha_management/core/provider/news_provider.dart';
 
 class NewsDetailScreen extends StatelessWidget {
   final NewsItem newsItem;
-
   const NewsDetailScreen({super.key, required this.newsItem});
 
   @override
@@ -14,7 +19,6 @@ class NewsDetailScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         body: CustomScrollView(
           slivers: [
-            // App Bar with image
             SliverAppBar(
               expandedHeight: 300,
               pinned: true,
@@ -24,19 +28,10 @@ class NewsDetailScreen extends StatelessWidget {
                 background: Stack(
                   fit: StackFit.expand,
                   children: [
-                    Image.asset(
-                      newsItem.imageUrl,
+                    SafeImage(
+                      urlOrAsset: newsItem.imageUrl,
+                      fallbackAsset: 'assets/images/event_image.jpg',
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: Colors.grey[300],
-                          child: const Icon(
-                            Icons.image,
-                            color: Colors.grey,
-                            size: 64,
-                          ),
-                        );
-                      },
                     ),
                     Container(
                       decoration: BoxDecoration(
@@ -55,69 +50,80 @@ class NewsDetailScreen extends StatelessWidget {
                 ),
               ),
             ),
-            // Content
             SliverToBoxAdapter(
               child: Container(
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Title
                     Text(
-                      newsItem.id == '4'
-                          ? 'Robredo: Elections just start of bigger battle'
-                          : newsItem.title,
-                      style: const TextStyle(
+                      newsItem.title,
+                      style: GoogleFonts.almarai(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
                         color: Colors.black87,
                         height: 1.2,
                       ),
-                      textDirection: TextDirection.rtl,
                     ),
                     const SizedBox(height: 16),
-                    // Author and date
                     Text(
-                      newsItem.date,
+                      'تاريخ النشر ${newsItem.date}',
                       style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                     ),
                     const SizedBox(height: 24),
-                    // Content
                     Text(
-                      newsItem.id == '4'
-                          ? '''MANILA, Philippines — For Vice President Leni Robredo, the outcome of the May 9 elections is just the beginning of the bigger battle.
-      
-      Without directly acknowledging defeat, Robredo reiterated her call to supporters on Tuesday night to accept the final results, whatever those may be.
-      
-      "Maybe we have not won this election – or we will not win this election – but I do not consider it a loss," she said in Bikolano after the thanksgiving mass at the Naga Metropolitan Cathedral.
-      
-      The Vice President emphasized that their campaign was about more than just winning an election. "This is not just about the elections. This is about the future of our democracy and the kind of country we want to leave for our children."
-      
-      Robredo's statement came as unofficial results showed her trailing significantly behind her closest rival. Despite the challenging results, she maintained her composure and grace throughout her address.
-      
-      "We fought a good fight. We ran a clean campaign based on truth, transparency, and genuine service to the Filipino people," she continued.
-      
-      The Vice President thanked her supporters, volunteers, and everyone who believed in their vision for the Philippines. She acknowledged their efforts and sacrifices throughout the campaign period.
-      
-      "Your dedication and passion have inspired millions of Filipinos. That alone is a victory worth celebrating," Robredo said.
-      
-      She also called for unity among Filipinos, regardless of political affiliations. "Now more than ever, we need to come together as one nation. Our differences should not divide us but make us stronger."
-      
-      The Vice President concluded her statement by reaffirming her commitment to continue serving the Filipino people, whether in government or in the private sector.'''
-                          : '''نظّمت مؤسسة عمرها رحلة تطوعية ترفيهية إلى مصيف بلودان في ريف دمشق، وذلك يوم الجمعة الواقع في 26/9/2025 تأتي هذه المبادرة في إطار سعي المؤسسة لخلق فرص تواصل بين المتطوعين وإعادة حيوية النشاط الجماعي نعيد شحن طاقتكم، نبني صداقات جديدة، ونحتفل بما حققته فرقنا ، حيث يصبح  التطوع تجربة مميزة في احضان الطبيعة .''',
+                      newsItem.body,
                       style: const TextStyle(
                         fontSize: 16,
                         color: Colors.black87,
                         height: 1.6,
                       ),
-                      textDirection: TextDirection.rtl,
                     ),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 80),
                   ],
                 ),
               ),
             ),
           ],
+        ),
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+          child: SizedBox(
+            height: 50,
+            child: ElevatedButton.icon(
+              icon: const Icon(Icons.delete_outline),
+              label: const Text('حذف الخبر'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              onPressed: () async {
+                final confirmed = await showConfirmDialog(
+                  context,
+                  title: 'حذف الخبر',
+                  message: 'هل أنت متأكد من حذف هذا الخبر؟',
+                  confirmText: 'حذف',
+                  confirmColor: AppColors.primary,
+                );
+                if (confirmed != true) return;
+
+                final ok = await context.read<NewsProvider>().removeById(
+                  newsItem.id,
+                );
+                if (!ok) {
+                  final err = context.read<NewsProvider>().error ?? 'فشل الحذف';
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(err)));
+                  return;
+                }
+                if (context.mounted) Navigator.pop(context);
+              },
+            ),
+          ),
         ),
       ),
     );

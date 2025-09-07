@@ -1,11 +1,10 @@
-// lib/core/providers/honor_board_provider.dart
 import 'package:flutter/foundation.dart';
 import 'package:ammerha_management/core/models/new_volunteer.dart';
 import 'package:ammerha_management/core/services/volunteer_service.dart';
 
 class HonorItem {
   final NewVolunteer user;
-  final int position; // الترتيب 1..N
+  final int position; // arrangement 1..N
   HonorItem({required this.user, required this.position});
 }
 

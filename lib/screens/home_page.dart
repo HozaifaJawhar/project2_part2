@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _refresh(BuildContext context) async {
-    final token = await _storage.read(key: 'auth_token'); // ← نفس المفتاح
+    final token = await _storage.read(key: 'auth_token');
     await context.read<EventsProvider>().refresh(token: token);
   }
 

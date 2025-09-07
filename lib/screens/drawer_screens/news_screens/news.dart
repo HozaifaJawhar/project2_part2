@@ -1,10 +1,12 @@
 import 'package:ammerha_management/config/theme/app_theme.dart';
-import 'package:ammerha_management/core/models/news_item.dart';
+import 'package:ammerha_management/core/provider/news_provider.dart';
 import 'package:ammerha_management/screens/drawer_screens/news_screens/add_news.dart';
 import 'package:ammerha_management/screens/drawer_screens/news_screens/news_details.dart';
 import 'package:ammerha_management/widgets/basics/drawer.dart';
 import 'package:ammerha_management/widgets/news/news_card.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class NewsScreen extends StatefulWidget {
   const NewsScreen({super.key});
@@ -14,59 +16,25 @@ class NewsScreen extends StatefulWidget {
 }
 
 class _NewsScreenState extends State<NewsScreen> {
-  int currentIndex = 3;
-
-  // Sample news data
-  final List<NewsItem> newsItems = [
-    NewsItem(
-      id: '1',
-      title:
-          'انضموا إلينا في رحلة تطوعية إلى بلودان حيث الطبيعة تلتقي بالإلهام',
-      imageUrl: 'assets/images/event_image.jpg',
-      date: '22 حزيران 2023',
-    ),
-    NewsItem(
-      id: '2',
-      title:
-          'انضموا إلينا في رحلة تطوعية إلى بلودان حيث الطبيعة تلتقي بالإلهام',
-      imageUrl: 'assets/images/event_image.jpg',
-      date: '22 حزيران 2023',
-    ),
-    NewsItem(
-      id: '3',
-      title:
-          'انضموا إلينا في رحلة تطوعية إلى بلودان حيث الطبيعة تلتقي بالإلهام',
-      imageUrl: 'assets/images/event_image.jpg',
-      date: '22 حزيران 2023',
-    ),
-    NewsItem(
-      id: '4',
-      title:
-          'انضموا إلينا في رحلة تطوعية إلى بلودان حيث الطبيعة تلتقي بالإلهام',
-      imageUrl: 'assets/images/event_image.jpg',
-      date: '22 حزيران 2023',
-    ),
-    NewsItem(
-      id: '5',
-      title:
-          'انضموا إلينا في رحلة تطوعية إلى بلودان حيث الطبيعة تلتقي بالإلهام',
-      imageUrl: 'assets/images/event_image.jpg',
-      date: '22 حزيران 2023',
-    ),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    // Load news when the screen opens (we can remove it when we call load() in main via ..load()) but here we want to laod the news when we open this page, not when we start the app
+    Future.microtask(() => context.read<NewsProvider>().load());
+  }
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.watch<NewsProvider>();
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
         centerTitle: true,
         title: Text(
           'الأخبار ',
-          style: TextStyle(
-            fontWeight: FontWeight.w800,
-            fontFamily: 'Cairo',
-            fontSize: 25,
+          style: GoogleFonts.almarai(
+            fontWeight: FontWeight.bold,
             color: AppColors.white,
           ),
         ),
@@ -89,42 +57,78 @@ class _NewsScreenState extends State<NewsScreen> {
       backgroundColor: const Color(0xFFF5F5F5),
       body: Directionality(
         textDirection: TextDirection.rtl,
-        child: RefreshIndicator(
-          onRefresh: () async {
-            // Simulate refresh
-            await Future.delayed(const Duration(seconds: 1));
-          },
-          child: ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: newsItems.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: NewsCard(
-                  newsItem: newsItems[index],
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            NewsDetailScreen(newsItem: newsItems[index]),
+        child: Builder(
+          builder: (_) {
+            // initial load status
+            if (provider.loading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            // error status
+            if (provider.error != null) {
+              return Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'حدث خطأ أثناء الجلب:\n${provider.error}',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.almarai(
+                        color: Colors.red,
+                        fontSize: 14,
                       ),
-                    );
-                  },
+                    ),
+                    const SizedBox(height: 12),
+                    ElevatedButton(
+                      onPressed: () => provider.load(),
+                      child: const Text('إعادة المحاولة'),
+                    ),
+                  ],
                 ),
               );
-            },
-          ),
+            }
+            // when there is no data..
+            if (provider.items.isEmpty) {
+              return const Center(child: Text('لا توجد أخبار'));
+            }
+
+            // Menu + Pull to refresh
+            return RefreshIndicator(
+              onRefresh: provider.load,
+              child: ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: provider.items.length,
+                itemBuilder: (context, index) {
+                  final item = provider.items[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: NewsCard(
+                      newsItem: item,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                NewsDetailScreen(newsItem: item),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+            );
+          },
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          await Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const AddNews()),
           );
+          // After returning from the add-on, we update the list
+          if (mounted) context.read<NewsProvider>().load();
         },
-        tooltip: 'Increment',
         shape: const CircleBorder(),
         child: const Icon(Icons.add),
       ),

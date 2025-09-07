@@ -1,6 +1,8 @@
 import 'dart:io';
-
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:ammerha_management/config/theme/app_theme.dart';
+import 'package:ammerha_management/core/provider/news_provider.dart';
 import 'package:ammerha_management/widgets/events/text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -90,10 +92,8 @@ class _AddNewsState extends State<AddNews> {
           centerTitle: true,
           title: Text(
             'إنشاء خبر جديد',
-            style: TextStyle(
-              fontWeight: FontWeight.w800,
-              fontFamily: 'Cairo',
-              fontSize: 25,
+            style: GoogleFonts.almarai(
+              fontWeight: FontWeight.bold,
               color: AppColors.primary,
             ),
           ),
@@ -235,43 +235,55 @@ class _AddNewsState extends State<AddNews> {
                     return null;
                   },
                 ),
-
                 const SizedBox(height: 45),
-
                 Center(
                   child: SizedBox(
                     width: 150,
                     height: 50,
-
                     child: ElevatedButton(
                       onPressed: () async {
-                        FocusScope.of(context).unfocus(); // إغلاق الكيبورد
-                        if (!_formKey.currentState!.validate()) {
-                          // لو في أخطاء، ما بنكمل
+                        FocusScope.of(context).unfocus();
+                        if (!_formKey.currentState!.validate()) return;
+
+                        final provider = context.read<NewsProvider>();
+                        final res = await provider.add(
+                          title: nameController.text.trim(),
+                          body: descriptionController.text.trim(),
+                          imageFile: _selectedImage != null
+                              ? File(_selectedImage!.path)
+                              : null,
+                        );
+
+                        if (provider.error != null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('فشل الإنشاء: ${provider.error}'),
+                            ),
+                          );
                           return;
                         }
 
-                        final imagePath = _selectedImage?.path ?? '';
-
+                        // when success
                         Navigator.pop(context);
                       },
-
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary, // لون الزر
-                        foregroundColor: Colors.white, // لون النص والأيقونات
-
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: Colors.white,
                         textStyle: const TextStyle(
-                          // شكل النص
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                         shape: RoundedRectangleBorder(
-                          // شكل الحواف
                           borderRadius: BorderRadius.circular(8),
                         ),
                         elevation: 5, // الظل
                       ),
-                      child: Center(child: const Text("إنشاء المنشور")),
+                      child: Center(
+                        child: Text(
+                          "إنشاء المنشور",
+                          style: GoogleFonts.almarai(fontSize: 15),
+                        ),
+                      ),
                     ),
                   ),
                 ),
