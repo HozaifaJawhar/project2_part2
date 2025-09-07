@@ -38,11 +38,22 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         ),
         body: ListView(
           children: [
-            Image(
-              image: AssetImage(widget.event.coverImage!.file),
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
+            widget.event.coverImage != null
+                ? Image.network(
+                    widget.event.coverImage!,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Image.asset(
+                      'assets/images/event_image.jpg',
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                : Image.asset(
+                    'assets/images/event_image.jpg',
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Text(

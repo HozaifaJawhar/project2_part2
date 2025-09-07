@@ -21,7 +21,7 @@ class Event {
   final int? volunteersCount;
   final int? acceptedCount;
   final int? pendingCount;
-  final EventImage? coverImage;
+  final String? coverImage;
   final EventDepartment? department;
 
   const Event({
@@ -55,9 +55,7 @@ class Event {
       volunteersCount: json['volunteers_count'],
       acceptedCount: json['accepted_count'],
       pendingCount: json['pending_count'],
-      coverImage: (json['cover_image'] is Map)
-          ? EventImage.fromJson(json['cover_image'])
-          : null,
+      coverImage: _parseImage(json['cover_image']),
       department: (json['department'] is Map)
           ? EventDepartment.fromJson(json['department'])
           : null,
@@ -77,7 +75,7 @@ class Event {
       'volunteers_count': volunteersCount,
       'accepted_count': acceptedCount,
       'pending_count': pendingCount,
-      'cover_image': coverImage?.toJson(),
+      'cover_image': coverImage,
       'department': department?.toJson(),
     };
   }
@@ -94,7 +92,7 @@ class Event {
     int? volunteersCount,
     int? acceptedCount,
     int? pendingCount,
-    EventImage? coverImage,
+    String? coverImage,
     EventDepartment? department,
   }) {
     return Event(
@@ -115,32 +113,47 @@ class Event {
   }
 }
 
-@immutable
-class EventImage {
-  final int id;
-  final String file;
-  final String extension;
-
-  const EventImage({
-    required this.id,
-    required this.file,
-    required this.extension,
-  });
-
-  factory EventImage.fromJson(Map<String, dynamic> json) {
-    return EventImage(
-      id: json['id'] ?? 0,
-      file: _cleanString(json['file']),
-      extension: _cleanString(json['extension']),
-    );
+String? _parseImage(dynamic v) {
+  if (v == null) return null;
+  if (v is String) {
+    final s = v.trim();
+    return s.isEmpty ? null : s;
   }
-
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'file': file,
-    'extension': extension,
-  };
+  if (v is Map<String, dynamic>) {
+    final f = (v['file'] ?? '').toString().trim();
+    if (f.isEmpty) return null;
+    final cleaned = f.replaceFirst(RegExp(r'(?<=/)/+'), '/');
+    return cleaned;
+  }
+  return null;
 }
+
+// @immutable
+// class EventImage {
+//   final int id;
+//   final String file;
+//   final String extension;
+
+//   const EventImage({
+//     required this.id,
+//     required this.file,
+//     required this.extension,
+//   });
+
+//   factory EventImage.fromJson(Map<String, dynamic> json) {
+//     return EventImage(
+//       id: json['id'] ?? 0,
+//       file: _cleanString(json['file']),
+//       extension: _cleanString(json['extension']),
+//     );
+//   }
+
+//   Map<String, dynamic> toJson() => {
+//     'id': id,
+//     'file': file,
+//     'extension': extension,
+//   };
+// }
 
 @immutable
 class EventDepartment {

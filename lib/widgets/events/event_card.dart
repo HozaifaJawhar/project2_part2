@@ -171,7 +171,24 @@ class OpportunityCard extends StatelessWidget {
               padding: const EdgeInsets.only(top: 12, bottom: 12, right: 12),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(35),
-                child: _EventCoverImage(url: event.coverImage?.file),
+                child: event.coverImage != null
+                    ? Image.network(
+                        event.coverImage!,
+                        height: 75,
+                        width: 75,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => Image.asset(
+                          'assets/images/event_image.jpg',
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : Image.asset(
+                        'assets/images/event_image.jpg',
+                        width: 75,
+                        height: 75,
+                        fit: BoxFit.cover,
+                      ),
               ),
             ),
             const SizedBox(width: 12),
@@ -262,38 +279,6 @@ class OpportunityCard extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _EventCoverImage extends StatelessWidget {
-  final String? url;
-  const _EventCoverImage({required this.url});
-
-  @override
-  Widget build(BuildContext context) {
-    final normalized = BuildImageUrl.normalize(url, AppString.baseUrl);
-
-    if (normalized.isEmpty) {
-      return const Image(
-        image: AssetImage('assets/images/event_image.jpg'),
-        width: 75,
-        height: 75,
-        fit: BoxFit.cover,
-      );
-    }
-
-    return Image.network(
-      normalized,
-      width: 75,
-      height: 75,
-      fit: BoxFit.cover,
-      errorBuilder: (_, __, ___) => const Image(
-        image: AssetImage('assets/images/event_image.jpg'),
-        width: 75,
-        height: 75,
-        fit: BoxFit.cover,
       ),
     );
   }
