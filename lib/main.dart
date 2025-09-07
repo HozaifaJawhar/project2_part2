@@ -4,6 +4,7 @@ import 'package:ammerha_management/core/helper/api.dart';
 import 'package:ammerha_management/core/provider/%20events%20management/events_provider.dart';
 import 'package:ammerha_management/core/provider/Department_Provider.dart';
 import 'package:ammerha_management/core/provider/auth_provider.dart';
+import 'package:ammerha_management/core/provider/ended_event_provider.dart';
 import 'package:ammerha_management/core/provider/honor_board_provider.dart';
 import 'package:ammerha_management/core/provider/news_provider.dart';
 import 'package:ammerha_management/core/provider/volunteer_requests_provider.dart';
@@ -28,7 +29,13 @@ void main() async {
         ChangeNotifierProvider(create: (context) => AuthProvider()),
         ChangeNotifierProvider(create: (context) => DepartmentProvider()),
         ChangeNotifierProvider(
-          create: (_) => EventsProvider(EventsService(Api())),
+          create: (_) =>
+              EventsProvider(EventsService(Api(), '/dashboard/events/all')),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => EndedEventProvider(
+            EventsService(Api(), '/dashboard/events/all?status=finished'),
+          ),
         ),
         ChangeNotifierProvider(
           create: (_) => VolunteerRequestsProvider(

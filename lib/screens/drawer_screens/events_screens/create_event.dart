@@ -151,7 +151,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
             padding: const EdgeInsets.all(16),
             child: Form(
               key: _formKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
+              autovalidateMode: AutovalidateMode.disabled,
+
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -160,7 +161,10 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     padding: EdgeInsets.only(right: 9),
                     child: Text(
                       'اختر صورة للفعالية',
-                      style: TextStyle(fontFamily: 'Cairo'),
+                      style: TextStyle(
+                        fontFamily: 'Cairo',
+                        color: AppColors.primary,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -226,7 +230,10 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     padding: EdgeInsets.only(right: 9),
                     child: Text(
                       'اسم الفعالية',
-                      style: TextStyle(fontFamily: 'Cairo'),
+                      style: TextStyle(
+                        fontFamily: 'Cairo',
+                        color: AppColors.primary,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -252,7 +259,10 @@ class _CreateEventPageState extends State<CreateEventPage> {
                               padding: EdgeInsets.only(right: 9),
                               child: Text(
                                 'تاريخ الفعالية',
-                                style: TextStyle(fontFamily: 'Cairo'),
+                                style: TextStyle(
+                                  fontFamily: 'Cairo',
+                                  color: AppColors.primary,
+                                ),
                               ),
                             ),
                             const SizedBox(height: 10),
@@ -295,7 +305,10 @@ class _CreateEventPageState extends State<CreateEventPage> {
                               padding: EdgeInsets.only(right: 9),
                               child: Text(
                                 'وقت الفعالية',
-                                style: TextStyle(fontFamily: 'Cairo'),
+                                style: TextStyle(
+                                  fontFamily: 'Cairo',
+                                  color: AppColors.primary,
+                                ),
                               ),
                             ),
                             const SizedBox(height: 10),
@@ -343,7 +356,10 @@ class _CreateEventPageState extends State<CreateEventPage> {
                               padding: EdgeInsets.only(right: 9),
                               child: Text(
                                 'أدنى ساعات',
-                                style: TextStyle(fontFamily: 'Cairo'),
+                                style: TextStyle(
+                                  fontFamily: 'Cairo',
+                                  color: AppColors.primary,
+                                ),
                               ),
                             ),
                             const SizedBox(height: 10),
@@ -370,7 +386,10 @@ class _CreateEventPageState extends State<CreateEventPage> {
                               padding: EdgeInsets.only(right: 9),
                               child: Text(
                                 'أقصى ساعات',
-                                style: TextStyle(fontFamily: 'Cairo'),
+                                style: TextStyle(
+                                  fontFamily: 'Cairo',
+                                  color: AppColors.primary,
+                                ),
                               ),
                             ),
                             const SizedBox(height: 10),
@@ -397,7 +416,10 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     padding: EdgeInsets.only(right: 9),
                     child: Text(
                       'مكان الفعالية',
-                      style: TextStyle(fontFamily: 'Cairo'),
+                      style: TextStyle(
+                        fontFamily: 'Cairo',
+                        color: AppColors.primary,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -415,7 +437,10 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     padding: EdgeInsets.only(right: 9),
                     child: Text(
                       'عدد المتطوعين',
-                      style: TextStyle(fontFamily: 'Cairo'),
+                      style: TextStyle(
+                        fontFamily: 'Cairo',
+                        color: AppColors.primary,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -457,7 +482,10 @@ class _CreateEventPageState extends State<CreateEventPage> {
                               padding: EdgeInsets.only(right: 9),
                               child: Text(
                                 'القسم',
-                                style: TextStyle(fontFamily: 'Cairo'),
+                                style: TextStyle(
+                                  fontFamily: 'Cairo',
+                                  color: AppColors.primary,
+                                ),
                               ),
                             ),
                             const SizedBox(height: 8),
@@ -490,7 +518,10 @@ class _CreateEventPageState extends State<CreateEventPage> {
                             padding: EdgeInsets.only(right: 9),
                             child: Text(
                               'القسم',
-                              style: TextStyle(fontFamily: 'Cairo'),
+                              style: TextStyle(
+                                fontFamily: 'Cairo',
+                                color: AppColors.primary,
+                              ),
                             ),
                           ),
                           const SizedBox(height: 10),
@@ -529,7 +560,10 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     padding: EdgeInsets.only(right: 9),
                     child: Text(
                       'وصف الفعالية',
-                      style: TextStyle(fontFamily: 'Cairo'),
+                      style: TextStyle(
+                        fontFamily: 'Cairo',
+                        color: AppColors.primary,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -688,7 +722,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
     IconData icon,
   ) {
     return InputDecoration(
-      suffixIcon: Icon(icon),
+      suffixIcon: Icon(icon, color: AppColors.primary),
       hintText: hint,
       fillColor: AppColors.white,
       hintStyle: GoogleFonts.poppins(

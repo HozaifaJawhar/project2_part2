@@ -13,7 +13,8 @@ import 'package:ammerha_management/core/provider/%20events%20management/events_p
 class OpportunityCard extends StatelessWidget {
   final Event event;
 
-  const OpportunityCard({super.key, required this.event});
+  final VoidCallback? onTap; // باراميتر جديد
+  const OpportunityCard({super.key, required this.event, this.onTap});
 
   String _formatDate(DateTime? dt) {
     if (dt == null) return '—';
@@ -254,14 +255,7 @@ class OpportunityCard extends StatelessWidget {
             ),
             // سهم التفاصيل
             GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EventDetailsScreen(event: event),
-                  ),
-                );
-              },
+              onTap: onTap,
               child: Container(
                 width: 37,
                 height: 100,

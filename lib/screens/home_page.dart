@@ -2,6 +2,7 @@ import 'package:ammerha_management/core/helper/api.dart';
 import 'package:ammerha_management/core/provider/%20events%20management/events_provider.dart';
 import 'package:ammerha_management/core/services/events_service.dart';
 import 'package:ammerha_management/screens/drawer_screens/events_screens/create_event.dart';
+import 'package:ammerha_management/screens/drawer_screens/events_screens/event_details_screen.dart';
 import 'package:ammerha_management/widgets/basics/search_textfield.dart';
 import 'package:ammerha_management/config/theme/app_theme.dart';
 import 'package:ammerha_management/widgets/basics/drawer.dart';
@@ -38,7 +39,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<EventsProvider>(
-      create: (_) => EventsProvider(EventsService(Api())),
+      create: (_) =>
+          EventsProvider(EventsService(Api(), '/dashboard/events/all')),
       child: Builder(
         builder: (context) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -180,7 +182,18 @@ class _HomePageState extends State<HomePage> {
                                 itemCount: provider.events.length,
                                 itemBuilder: (context, index) {
                                   final event = provider.events[index];
-                                  return OpportunityCard(event: event);
+                                  return OpportunityCard(
+                                    event: event,
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              EventDetailsScreen(event: event),
+                                        ),
+                                      );
+                                    },
+                                  );
                                 },
                               ),
                             ),

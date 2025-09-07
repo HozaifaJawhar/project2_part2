@@ -15,6 +15,15 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   //bool isRegistered = false;
   @override
   Widget build(BuildContext context) {
+    ImageProvider imageProvider;
+
+    if (widget.event.coverImage != null &&
+        widget.event.coverImage!.file != null &&
+        widget.event.coverImage!.file!.isNotEmpty) {
+      imageProvider = NetworkImage(widget.event.coverImage!.file!);
+    } else {
+      imageProvider = const AssetImage('assets/images/profile.png');
+    }
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -217,7 +226,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
               child: Row(
                 children: [
                   Text(
-                    'عدد الساعات الأعلى: ${widget.event.maxHours}',
+                    'العدد الأعلى: ${widget.event.maxHours}',
                     style: GoogleFonts.almarai(
                       fontWeight: FontWeight.normal,
                       fontSize: 16,
@@ -226,7 +235,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                   ),
                   SizedBox(width: 40),
                   Text(
-                    'عدد الساعات الأدنى: ${widget.event.minHours}',
+                    'العدد الأدنى: ${widget.event.minHours}',
                     style: GoogleFonts.almarai(
                       fontWeight: FontWeight.normal,
                       fontSize: 16,
