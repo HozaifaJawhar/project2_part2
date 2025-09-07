@@ -99,7 +99,17 @@ class EndedEventCard extends StatelessWidget {
                   ),
                 ),
                 child: const Center(
-                  child: Icon(Icons.event_outlined, color: AppColors.white),
+                  child: RotatedBox(
+                    quarterTurns: -1, // -1 = 90 درجة لليسار
+                    child: Text(
+                      "تقييم",
+                      style: TextStyle(
+                        color: AppColors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
