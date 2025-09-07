@@ -49,6 +49,21 @@ class NewVolunteer {
       return s.contains('%') || d > 1 ? d / 100.0 : d;
     }
 
+    String? _parseImage(dynamic v) {
+      if (v == null) return null;
+      if (v is String) {
+        final s = v.trim();
+        return s.isEmpty ? null : s;
+      }
+      if (v is Map<String, dynamic>) {
+        final f = (v['file'] ?? '').toString().trim();
+        if (f.isEmpty) return null;
+        final cleaned = f.replaceFirst(RegExp(r'(?<=/)/+'), '/');
+        return cleaned;
+      }
+      return null;
+    }
+
     return NewVolunteer(
       id: (json['id'] ?? 0) is int
           ? json['id']
@@ -74,13 +89,7 @@ class NewVolunteer {
       departmentId: (dept is Map && dept['id'] != null)
           ? '${dept['id']}'
           : null,
-      imageUrl:
-          (json['personalImage'] == null ||
-              json['personalImage'].toString().isEmpty)
-          ? null
-          : json['personalImage'].toString(),
-      rank: (json['rank'] ?? '').toString(),
-      progress: _parseProgress(json['progress']),
+      imageUrl: _parseImage(json['personalImage']),
     );
   }
 }
