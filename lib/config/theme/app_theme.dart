@@ -12,6 +12,7 @@ class AppColors {
   static const Color darkBlue = Color(0xFF0A2A6E);
   static const Color secondaryBlack = Color(0xF0484747);
   static Color navyBlueWithOpacity10 = Color(0xFF13296A).withOpacity(0.1);
+  static const Color perfectWithPrimary = Color.fromARGB(200, 163, 96, 0);
 }
 
 class AppTheme {

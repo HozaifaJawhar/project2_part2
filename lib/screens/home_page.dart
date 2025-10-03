@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<EventsProvider>(
       create: (_) =>
-          EventsProvider(EventsService(Api(), '/dashboard/events/all')),
+          EventsProvider(EventsService(Api(), '/dashboard/events/all', null)),
       child: Builder(
         builder: (context) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -159,6 +159,7 @@ class _HomePageState extends State<HomePage> {
                               ],
                             ),
                           ),
+
                           Padding(
                             padding: const EdgeInsets.only(top: 16, right: 16),
                             child: Text(

@@ -60,28 +60,6 @@ class Api {
     }
   }
 
-  Future postFiles({
-    required String url,
-    required String filePath,
-    required String key,
-    @required String? token,
-  }) async {
-    var request = http.MultipartRequest("POST", Uri.parse(url));
-    request.headers.addAll({'Authorization': 'Bearer $token'});
-    request.files.add(await http.MultipartFile.fromPath(key, filePath));
-    final response = await request.send();
-    var jsonResponse = await http.Response.fromStream(response);
-    if (jsonResponse.statusCode == 200 || jsonResponse.statusCode == 201) {
-      print(response.statusCode);
-      var js = jsonDecode(jsonResponse.body);
-      print('///$js///');
-    } else {
-      throw Exception(
-        'there is a problem with status code ${response.statusCode} with body ${jsonDecode(jsonResponse.body)}',
-      );
-    }
-  }
-
   // ✅ New: Generic multipart accepts fields + more than one file (we use it to create the news with cover_image[file])
   Future<dynamic> postMultipart({
     required String url,
@@ -167,5 +145,20 @@ class Api {
       var errorData = jsonDecode(response.body);
       throw Exception(errorData['message'] ?? 'Failed to delete resource');
     }
+  }
+
+  // للحصول على Bytes (ملفات/إكسل/صور...)
+  Future<Uint8List> getBytes({required String url, String? token}) async {
+    final headers = <String, String>{
+      'Accept': '*/*',
+      if (token != null) 'Authorization': 'Bearer $token',
+    };
+    final res = await http
+        .get(Uri.parse(url), headers: headers)
+        .timeout(const Duration(seconds: 30));
+    if (res.statusCode >= 200 && res.statusCode < 300) {
+      return res.bodyBytes;
+    }
+    throw Exception('GET(bytes) $url failed [${res.statusCode}]: ${res.body}');
   }
 }

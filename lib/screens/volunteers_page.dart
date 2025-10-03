@@ -35,7 +35,7 @@ class _VolunteersPage extends State<VolunteersPage> {
           backgroundColor: AppColors.primary,
           centerTitle: true,
           title: Text(
-            'طلبات التطوع',
+            'إدارة المتطوعين',
             style: GoogleFonts.almarai(
               fontWeight: FontWeight.w800,
               fontSize: 20,
@@ -229,7 +229,8 @@ class _volunteerTile extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => VolunteerProfileScreen2(vol: volunteer),
+            builder: (context) =>
+                VolunteerProfileScreen2(vol: volunteer, showEndButton: true),
           ),
         );
       },

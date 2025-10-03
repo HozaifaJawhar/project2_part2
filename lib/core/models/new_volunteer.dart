@@ -90,6 +90,7 @@ class NewVolunteer {
           ? '${dept['id']}'
           : null,
       imageUrl: _parseImage(json['personalImage']),
+      rank: (json['rank'] ?? '').toString(),
     );
   }
 }

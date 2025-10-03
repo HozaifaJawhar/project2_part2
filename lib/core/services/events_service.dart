@@ -1,16 +1,21 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:ammerha_management/config/constants/url.dart';
 import 'package:ammerha_management/core/helper/api.dart';
 import 'package:ammerha_management/core/models/create_event_input.dart';
 import 'package:ammerha_management/core/models/event.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 
 class EventsService {
   final Api _api;
   final String custumUrl;
-  EventsService(this._api, this.custumUrl);
+  final String? token;
+  EventsService(this._api, this.custumUrl, this.token);
 
   Future<List<Event>> getEvents({String? token}) async {
     final url = '${AppString.baseUrl}$custumUrl';
@@ -84,5 +89,70 @@ class EventsService {
   }) async {
     final url = '${AppString.baseUrl}/dashboard/events/delete/$eventId';
     await _api.delete(url: url, token: token);
+  }
+
+  // Get_ended events
+  Future<List<Event>> getEndedEvents({String? token}) async {
+    final url = '${AppString.baseUrl}$custumUrl';
+    final res = await _api.get(url: url, token: token);
+
+    if (res is Map<String, dynamic> && res['data'] is List) {
+      final list = (res['data'] as List)
+          .whereType<Map<String, dynamic>>()
+          .map<Event>((e) => Event.fromJson(e))
+          .toList();
+      return list;
+    }
+
+    throw Exception('Unexpected response format while fetching events');
+  }
+
+  /// تنزيل قالب التقييم وإرجاع مسار الملف (نحفَظه مؤقتًا ونفتحه لاحقًا)
+  Future<String> downloadRatingTemplate({required int eventId}) async {
+    const storage = FlutterSecureStorage();
+    final token = await storage.read(key: 'auth_token');
+
+    final url =
+        '${AppString.baseUrl}/dashboard/events/$eventId/volunteers/rating-form/export';
+
+    // Helper يفترض يعيد Bytes (application/octet-stream أو xlsx)
+    final Uint8List bytes = await _api.getBytes(url: url, token: token);
+    if (bytes.isEmpty) {
+      throw Exception('لم يتم استلام أي بيانات من الخادم.');
+    }
+
+    final dir = await getTemporaryDirectory();
+    final path = '${dir.path}/rating_template_event_$eventId.xlsx';
+    final file = File(path);
+    await file.writeAsBytes(bytes, flush: true);
+
+    if (!await file.exists()) {
+      throw Exception('تعذر كتابة الملف محليًا.');
+    }
+    return file.path;
+  }
+
+  /// رفع تقرير التقييم (يقرأ التوكن داخليًا ويستخدم Api.postMultipart)
+  Future<void> uploadRatingReport({
+    required int eventId,
+    required String filePath,
+    String fileFieldKey = 'file',
+  }) async {
+    const storage = FlutterSecureStorage();
+    final token = await storage.read(key: 'auth_token');
+
+    final url =
+        '${AppString.baseUrl}/dashboard/events/$eventId/volunteers/rating/submit';
+
+    final file = File(filePath);
+    if (!await file.exists()) {
+      throw Exception('الملف غير موجود: $filePath');
+    }
+
+    await _api.postMultipart(
+      url: url,
+      files: {fileFieldKey: filePath},
+      token: token,
+    );
   }
 }

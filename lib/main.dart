@@ -1,10 +1,10 @@
 import 'package:ammerha_management/config/routes/app_routes.dart';
 import 'package:ammerha_management/config/routes/route_generator.dart';
 import 'package:ammerha_management/core/helper/api.dart';
+import 'package:ammerha_management/core/provider/%20events%20management/ended_events_provider.dart';
 import 'package:ammerha_management/core/provider/%20events%20management/events_provider.dart';
 import 'package:ammerha_management/core/provider/Department_Provider.dart';
 import 'package:ammerha_management/core/provider/auth_provider.dart';
-import 'package:ammerha_management/core/provider/ended_event_provider.dart';
 import 'package:ammerha_management/core/provider/honor_board_provider.dart';
 import 'package:ammerha_management/core/provider/news_provider.dart';
 import 'package:ammerha_management/core/provider/volunteer_requests_provider.dart';
@@ -29,12 +29,13 @@ void main() async {
         ChangeNotifierProvider(create: (context) => AuthProvider()),
         ChangeNotifierProvider(create: (context) => DepartmentProvider()),
         ChangeNotifierProvider(
-          create: (_) =>
-              EventsProvider(EventsService(Api(), '/dashboard/events/all')),
+          create: (_) => EventsProvider(
+            EventsService(Api(), '/dashboard/events/all', null),
+          ),
         ),
         ChangeNotifierProvider(
-          create: (_) => EndedEventProvider(
-            EventsService(Api(), '/dashboard/events/all?status=finished'),
+          create: (_) => EndedEventsProvider(
+            EventsService(Api(), '/dashboard/events/all?status=finished', null),
           ),
         ),
         ChangeNotifierProvider(
